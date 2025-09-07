@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joo suis mignonne</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #fefefe;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(254, 254, 254, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e8e8e8;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-decoration: none;
+            letter-spacing: -0.3px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #1a1a1a;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background-color: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #fefefe;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            font-weight: 300;
+            letter-spacing: -1.5px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 40px;
+            line-height: 1.7;
+            font-weight: 400;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 2px;
+            background: #1a1a1a;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.9s forwards;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: #1a1a1a;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: -0.8px;
+        }
+
+        /* Blog Section */
+        .blog-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .blog-entry {
+            display: flex;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .blog-entry:hover {
+            transform: translateY(-2px);
+        }
+
+        .blog-entry:last-child {
+            border-bottom: none;
+        }
+
+        .blog-date {
+            flex-shrink: 0;
+            width: 120px;
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            padding-top: 3px;
+        }
+
+        .blog-content {
+            flex: 1;
+        }
+
+        .blog-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f8f8f8;
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+        }
+
+        .blog-excerpt {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .blog-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 12px;
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* Grid Layout for different sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .content-card {
+            background: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #ccc;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #f8f8f8;
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-radius: 15px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .card-meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .card-excerpt {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Shop Section */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #ccc;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Diary Section */
+        .diary-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .diary-entry {
+            background: #fafafa;
+            padding: 35px;
+            border-left: 4px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .diary-entry:hover {
+            border-left-color: #1a1a1a;
+            background: #f8f8f8;
+        }
+
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .diary-date {
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .diary-mood {
+            font-size: 24px;
+        }
+
+        .diary-content {
+            color: #444;
+            line-height: 1.8;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: #fefefe;
+            border-top: 1px solid #e8e8e8;
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #1a1a1a;
+        }
+
+        /* Create Button */
+        .create-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 56px;
+            height: 56px;
+            background: #1a1a1a;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            font-weight: 300;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(26, 26, 26, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .create-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(26, 26, 26, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: #1a1a1a;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            background: #fafafa;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            background: white;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #555;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            border-color: #333;
+        }
+
+        /* Special sections */
+        .fitness-card, .review-card {
+            background: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fitness-card:hover, .review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .workout-date {
+            font-size: 13px;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .workout-type {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .workout-duration {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .workout-notes {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .review-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 16px;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .blog-entry {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .blog-date {
+                width: auto;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .shop-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#home" class="logo">Joo suis mignonne</a>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#photos">Photos</a></li>
+                        <li><a href="#videos">Videos</a></li>
+                        <li><a href="#fitness">Fitness</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#diary">Diary</a></li>
+                        <li><a href="#shop">Shop</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title">Joo suis mignonne</h1>
+            <p class="hero-subtitle">
+                주형이의 공간<br>
+                나만의 시각으로 세상을 바라보는 이야기
+            </p>
+            <div class="hero-divider"></div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="section" id="blog">
+        <div class="container">
+            <h2 class="section-title">Recent Thoughts</h2>
+            
+            <div class="blog-entries">
+                <article class="blog-entry" onclick="openModal('blog')">
+                    <div class="blog-date">Sep 08, 2024</div>
+                    <div class="blog-content">
+                        <span class="blog-category">Travel</span>
+                        <h3 class="blog-title">몽골 초원에서 찾은 진정한 자유</h3>
+                        <p class="blog-excerpt">
+                            유목민들과 함께 살아보며 깨달은 소유하지 않는 삶의 지혜. 
+                            광활한 초원에서 마주한 나 자신과의 대화, 그리고 진정한 풍요로움의 의미를 찾아가는 이야기입니다.
+                        </p>
+                        <div class="blog-tags">
+                            <span class="tag">#여행</span>
+                            <span class="tag">#삶</span>
+                            <span class="tag">#자유</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="blog-entry" onclick="openModal('blog')">
+                    <div class="blog-date">Sep 05, 2024</div>
+                    <div class="blog-content">
+                        <span class="blog-category">Lifestyle</span>
+                        <h3 class="blog-title">미니멀 라이프를 시작하며</h3>
+                        <p class="blog-excerpt">
+                            물건을 줄이고 마음을 채우는 여행. 정말 필요한 것과 그저 원하는 것 사이의 경계를 
+                            찾아가며 배운 삶의 본질에 대한 이야기를 나눕니다.
+                        </p>
+                        <div class="blog-tags">
+                            <span class="tag">#미니멀</span>
+                            <span class="tag">#라이프스타일</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photos Section -->
+    <section class="section" id="photos">
+        <div class="container">
+            <h2 class="section-title">Daily Moments</h2>
+            
+            <div class="content-grid">
+                <div class="content-card" onclick="openModal('photo')">
+                    <div class="card-image">📸</div>
+                    <div class="card-content">
+                        <span class="card-category">Daily</span>
+                        <h3 class="card-title">오늘의 커피 한 잔</h3>
+                        <p class="card-meta">2시간 전</p>
+                        <p class="card-excerpt">좋은 책과 함께하는 여유로운 오후</p>
+                    </div>
+                </div>
+                
+                <div class="content-card" onclick="openModal('photo')">
+                    <div class="card-image">🌸</div>
+                    <div class="card-content">
+                        <span class="card-category">Nature</span>
+                        <h3 class="card-title">산책길의 꽃들</h3>
+                        <p class="card-meta">1일 전</p>
+                        <p class="card-excerpt">길가에서 만난 예쁜 꽃들이 주는 작은 기쁨</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="section" id="videos">
+        <div class="container">
+            <h2 class="section-title">Video Stories</h2>
+            
+            <div class="content-grid">
+                <div class="content-card" onclick="openModal('video')">
+                    <div class="card-image">🎬</div>
+                    <div class="card-content">
+                        <span class="card-category">Travel Vlog</span>
+                        <h3 class="card-title">몽골 초원 여행 VLOG</h3>
+                        <p class="card-meta">2,345 views • 3 days ago</p>
+                        <p class="card-excerpt">유목민과 함께한 7일간의 특별한 경험</p>
+                    </div>
+                </div>
+                
+                <div class="content-card" onclick="openModal('video')">
+                    <div class="card-image">🏠</div>
+                    <div class="card-content">
+                        <span class="card-category">Lifestyle</span>
+                        <h3 class="card-title">미니멀 라이프 시작하기</h3>
+                        <p class="card-meta">1,234 views • 1 week ago</p>
+                        <p class="card-excerpt">물건 정리의 기술과 마음 정리의 과정</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitness Section -->
+    <section class="section" id="fitness">
+        <div class="container">
+            <h2 class="section-title">Fitness Journey</h2>
+            
+            <div class="fitness-card" onclick="openModal('fitness')">
+                <div class="workout-date">September 8, 2024</div>
+                <div class="workout-type">상체 근력 운동</div>
+                <div class="workout-duration">운동 시간: 1시간 15분</div>
+                <div class="workout-notes">
+                    오늘은 벤치프레스, 덤벨 플라이, 랫풀다운 위주로 운동했다. 
+                    벤치프레스에서 이전보다 5kg 더 들 수 있어서 뿌듯했다. 
+                    꾸준히 하니까 정말 실력이 늘고 있는 것 같다.
+                </div>
+            </div>
+            
+            <div class="fitness-card" onclick="openModal('fitness')">
+                <div class="workout-date">September 6, 2024</div>
+                <div class="workout-type">러닝</div>
+                <div class="workout-duration">운동 시간: 45분 | 거리: 8km</div>
+                <div class="workout-notes">
+                    한강을 따라 8km 달렸다. 날씨가 좋아서 기분 좋게 뛸 수 있었다. 
+                    페이스도 이전보다 빨라졌고, 숨도 덜 차는 것 같다. 체력이 늘고 있다!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="section" id="reviews">
+        <div class="container">
+            <h2 class="section-title">Reviews</h2>
+            
+            <div class="content-grid">
+                <div class="review-card" onclick="openModal('review')">
+                    <span class="card-category">Book</span>
+                    <h3 class="card-title">작은 것들의 신</h3>
+                    <div class="review-rating">
+                        <span class="stars">⭐⭐⭐⭐⭐</span>
+                        <span class="rating-text">5/5</span>
+                    </div>
+                    <p class="card-excerpt">
+                        아룬다티 로이의 섬세한 문체로 그려낸 인도의 풍경이 인상적이었다. 
+                        가족의 비밀과 사회의 모순을 다룬 깊이 있는 소설.
+                    </p>
+                </div>
+                
+                <div class="review-card" onclick="openModal('review')">
+                    <span class="card-category">Movie</span>
+                    <h3 class="card-title">기생충</h3>
+                    <div class="review-rating">
+                        <span class="stars">⭐⭐⭐⭐⭐</span>
+                        <span class="rating-text">5/5</span>
+                    </div>
+                    <p class="card-excerpt">
+                        봉준호 감독의 탁월한 연출과 모든 배우들의 완벽한 연기. 
+                        계급 사회의 모순을 블랙 코미디로 풀어낸 걸작.
+                    </p>
