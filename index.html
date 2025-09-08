@@ -542,39 +542,57 @@
             }
             
             static processVintageColor(r, g, b) {
-                // 더 미묘한 필름 톤 커브
+                // 화질 개선을 위한 더 정교한 필름 톤 커브
                 const filmCurve = (x) => {
                     const normalized = x / 255;
-                    // 아주 부드러운 S-커브
-                    const curved = normalized + (normalized - normalized * normalized) * 0.15;
+                    // 더 선명한 S-커브 (화질 향상)
+                    const curved = normalized + (normalized - normalized * normalized) * 0.25;
                     return Math.max(0, Math.min(255, curved * 255));
                 };
                 
-                // 색상 쇠퇴를 더 미묘하게
+                // 그림자 영역 강화 함수
+                const shadowEnhance = (x) => {
+                    const normalized = x / 255;
+                    // 어두운 부분을 더 어둡게 (0.6 이하 영역 강화)
+                    if (normalized < 0.6) {
+                        return normalized * 0.85;
+                    }
+                    return normalized;
+                };
+                
+                // 색상 쇠퇴를 더 미묘하게 (화질 보존)
                 const colorFade = (color, intensity) => {
-                    const fade = 0.92 + intensity * 0.05;
+                    const fade = 0.94 + intensity * 0.03; // 더 미묘한 페이드
                     return color * fade;
                 };
                 
-                // 아주 미묘한 따뜻함
-                r = colorFade(r * 1.01, 0.08);
-                g = colorFade(g * 1.002, 0.05);
-                b = colorFade(b * 0.995, 0.03);
+                // 아주 미묘한 따뜻함 (화질 유지)
+                r = colorFade(r * 1.008, 0.06);
+                g = colorFade(g * 1.003, 0.04);
+                b = colorFade(b * 0.997, 0.02);
                 
-                // 채도를 덜 감소
+                // 그림자 부분 어둡게 처리
                 const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-                const saturation = 0.85; // 더 자연스러운 채도
-                r = luminance + (r - luminance) * saturation;
-                g = luminance + (g - luminance) * saturation;
-                b = luminance + (b - luminance) * saturation;
+                const shadowFactor = shadowEnhance(luminance / 255);
                 
-                // 부드러운 톤 커브 적용
+                r *= shadowFactor;
+                g *= shadowFactor;
+                b *= shadowFactor;
+                
+                // 채도를 덜 감소 (화질 보존)
+                const avgLum = 0.299 * r + 0.587 * g + 0.114 * b;
+                const saturation = 0.9; // 더 높은 채도로 화질 향상
+                r = avgLum + (r - avgLum) * saturation;
+                g = avgLum + (g - avgLum) * saturation;
+                b = avgLum + (b - avgLum) * saturation;
+                
+                // 향상된 톤 커브 적용
                 r = filmCurve(r);
                 g = filmCurve(g);
                 b = filmCurve(b);
                 
-                // 밝기 조정을 더 미묘하게
-                const brightness = 1.03;
+                // 밝기 조정을 더 미묘하게 (화질 보존)
+                const brightness = 1.02;
                 r = Math.min(255, r * brightness);
                 g = Math.min(255, g * brightness);
                 b = Math.min(255, b * brightness);
@@ -587,23 +605,36 @@
             }
             
             static processVintageBW(r, g, b) {
-                // 빈티지 흑백 변환 (더 따뜻한 가중치)
+                // 빈티지 흑백 변환 (더 정교한 가중치)
                 const luminance = 0.25 * r + 0.65 * g + 0.1 * b;
                 
-                // 부드러운 대비 조정
+                // 향상된 대비 조정 (화질 개선)
                 const contrast = (x) => {
                     const normalized = x / 255;
-                    // 중간톤을 살짝 밝게, 너무 강하지 않게
-                    const adjusted = Math.pow(normalized, 0.9) * 1.05;
+                    // 중간톤을 살짝 밝게, 더 선명하게
+                    const adjusted = Math.pow(normalized, 0.88) * 1.08;
                     return Math.min(255, adjusted * 255);
                 };
                 
-                let gray = contrast(luminance);
+                // 그림자 강화 함수
+                const shadowEnhance = (x) => {
+                    const normalized = x / 255;
+                    // 어두운 부분 더 어둡게 (0.5 이하 영역)
+                    if (normalized < 0.5) {
+                        return normalized * 0.8;
+                    } else if (normalized < 0.7) {
+                        return normalized * 0.9;
+                    }
+                    return normalized;
+                };
                 
-                // 은염 필름의 따뜻한 톤 (세피아 느낌, 아주 미묘하게)
-                const sepia_r = gray * 1.05;
-                const sepia_g = gray * 1.02;
-                const sepia_b = gray * 0.95;
+                let gray = contrast(luminance);
+                gray *= shadowEnhance(gray / 255) * 255;
+                
+                // 은염 필름의 따뜻한 톤 (더 미묘하게, 화질 보존)
+                const sepia_r = gray * 1.03;
+                const sepia_g = gray * 1.015;
+                const sepia_b = gray * 0.97;
                 
                 return {
                     r: Math.round(Math.max(0, Math.min(255, sepia_r))),
@@ -631,15 +662,15 @@
             }
             
             static applyFilmGrain(data, width, height) {
-                // 더 자연스럽고 미묘한 그레인
+                // 화질 개선된 미묘한 그레인
                 for (let i = 0; i < data.length; i += 4) {
                     const x = (i / 4) % width;
                     const y = Math.floor((i / 4) / width);
                     
-                    // 아주 미묘한 노이즈 패턴
-                    const noise1 = Math.sin(x * 0.15) * Math.cos(y * 0.15);
-                    const noise2 = Math.sin(x * 0.08 + y * 0.08) * 0.3;
-                    const grain = (noise1 + noise2) * 1.5; // 훨씬 더 미묘한 그레인
+                    // 훨씬 더 미묘한 노이즈 패턴 (화질 보존)
+                    const noise1 = Math.sin(x * 0.2) * Math.cos(y * 0.2);
+                    const noise2 = Math.sin(x * 0.1 + y * 0.1) * 0.2;
+                    const grain = (noise1 + noise2) * 0.8; // 그레인 강도 대폭 감소
                     
                     data[i] = Math.max(0, Math.min(255, data[i] + grain));
                     data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + grain));
@@ -676,20 +707,35 @@
         }
 
         function processImageWithFilm(img, canvas, style) {
-            const ctx = canvas.getContext('2d');
-            
-            const aspectRatio = img.width / img.height;
-            canvas.width = 300;
-            canvas.height = 300 / aspectRatio;
-            
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const processedData = FilmProcessor.applyFilmLook(imageData, style);
-            
-            ctx.putImageData(processedData, 0, 0);
-            
-            return canvas.toDataURL();
+            console.log('Starting image processing:', style); // 디버깅용
+            try {
+                const ctx = canvas.getContext('2d');
+                
+                if (!ctx) {
+                    console.error('Cannot get canvas context');
+                    return null;
+                }
+                
+                const aspectRatio = img.width / img.height;
+                canvas.width = 300;
+                canvas.height = 300 / aspectRatio;
+                
+                console.log('Canvas size:', canvas.width, 'x', canvas.height); // 디버깅용
+                
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const processedData = FilmProcessor.applyFilmLook(imageData, style);
+                
+                ctx.putImageData(processedData, 0, 0);
+                
+                const result = canvas.toDataURL();
+                console.log('Image processing completed'); // 디버깅용
+                return result;
+            } catch (error) {
+                console.error('Error in processImageWithFilm:', error);
+                return null;
+            }
         }
 
         function handlePhotoUpload(event) {
@@ -808,47 +854,3 @@
 
         function cancelEdit(id) {
             renderScrapbook();
-        }
-
-        function renderScrapbook() {
-            const container = document.getElementById('scrapbook-container');
-            container.innerHTML = '';
-
-            scrapbookData.forEach(entry => {
-                const pageHTML = `
-                    <div class="scrapbook-page" data-id="${entry.id}">
-                        <img src="${entry.photo}" alt="memory" class="page-photo" onclick="openPhotoModal('${entry.photo}')">
-                        <div class="page-content">
-                            <div class="edit-actions">
-                                <button class="edit-btn" onclick="editEntry(${entry.id})">Edit</button>
-                                <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
-                            </div>
-                            <h3 class="page-title" onclick="editEntry(${entry.id})">${entry.title}</h3>
-                            <p class="page-text" onclick="editEntry(${entry.id})">${entry.content}</p>
-                            <div class="page-date">${entry.date}</div>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', pageHTML);
-            });
-        }
-
-        window.addEventListener('load', function() {
-            const sampleEntry = {
-                id: 1,
-                photo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-family="Arial" font-size="16">Upload a photo to see AI film processing</text></svg>',
-                title: 'AI Film Processing Ready',
-                content: 'Upload any photo and watch it transform with authentic film camera characteristics. Every image will have the same consistent vintage look.',
-                date: new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                })
-            };
-            
-            scrapbookData.push(sampleEntry);
-            renderScrapbook();
-        });
-    </script>
-</body>
-</html>
