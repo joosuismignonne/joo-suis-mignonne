@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Scrapbook Diary</title>
+    <title>Joo suis mignonne</title>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Jua&family=Dongle:wght@300;400;700&family=Hi+Melody&family=Gaegu&display=swap" rel="stylesheet">
     <style>
         /* 기본 스타일 */
@@ -104,23 +104,22 @@
         /* Diary Entry */
         .diary-entry {
             margin-bottom: 60px;
-            background-color: #fffaf0; /* 노트 종이색 */
-            border: 1px solid #e0d9d0;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
             padding: 40px;
             position: relative;
-            transform: rotate(-0.5deg);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: rotate(0);
+            transition: none;
         }
         
         .diary-entry:nth-child(2n) {
-            transform: rotate(0.5deg);
+            transform: rotate(0);
         }
 
         .diary-entry:hover {
-            transform: translateY(-5px) rotate(0deg);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: none;
+            box-shadow: none;
         }
 
         /* Entry Header */
@@ -196,7 +195,7 @@
             min-height: 350px;
             border: 2px dashed #e0d9d0;
             border-radius: 10px;
-            background-color: #fcf9f6;
+            background-color: #fffaf0;
             padding: 20px;
             overflow: hidden; /* 아이템이 캔버스 밖으로 나가지 않게 */
         }
@@ -528,7 +527,7 @@
 
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1 class="hero-title">My Beautiful Memories</h1>
+            <h1 class="hero-title">Joo suis mignonne</h1>
             <p class="hero-subtitle">손으로 꾸민 듯, 나만의 감성 스크랩북</p>
         </div>
     </section>
@@ -679,29 +678,48 @@
                     itemEl.style.top = item.y + 'px';
                     itemEl.style.width = item.width + 'px';
                     itemEl.style.height = item.height + 'px';
+                    itemEl.style.transform = `rotate(${item.rotate || 0}deg)`;
                     
+                    let innerEl;
                     if (item.type === 'photo') {
-                        const img = document.createElement('img');
-                        img.src = item.content;
-                        img.className = 'scrapbook-photo';
-                        itemEl.appendChild(img);
+                        innerEl = document.createElement('img');
+                        innerEl.src = item.content;
+                        innerEl.className = 'scrapbook-photo';
                     } else if (item.type === 'sticker') {
-                        const sticker = document.createElement('div');
-                        sticker.textContent = item.content;
-                        sticker.className = 'scrapbook-sticker';
-                        itemEl.appendChild(sticker);
+                        innerEl = document.createElement('span');
+                        innerEl.textContent = item.content;
+                        innerEl.className = 'scrapbook-sticker';
+                        innerEl.style.fontSize = `${item.width * 0.8}px`;
                     } else if (item.type === 'text') {
-                        const text = document.createElement('div');
-                        text.textContent = item.content;
-                        text.className = 'scrapbook-text';
-                        text.style.fontFamily = `'${item.font}'`;
-                        itemEl.appendChild(text);
+                        innerEl = document.createElement('textarea');
+                        innerEl.value = item.content;
+                        innerEl.className = 'scrapbook-text';
+                        innerEl.style.fontFamily = `'${item.font}'`;
+                        innerEl.style.fontSize = `${item.width * 0.1}px`;
+                        innerEl.addEventListener('input', (e) => {
+                            item.content = e.target.value;
+                        });
                     }
 
+                    itemEl.appendChild(innerEl);
+
+                    // 컨트롤 버튼 추가
+                    const controls = document.createElement('div');
+                    controls.className = 'item-controls';
+                    controls.innerHTML = `<button class="control-btn delete" onclick="deleteScrapbookItem(${index})">🗑️</button>`;
+                    itemEl.appendChild(controls);
+                    
+                    // 크기 조절 핸들 추가
+                    const handle = document.createElement('div');
+                    handle.className = 'resize-handle bottom-right';
+                    itemEl.appendChild(handle);
+                    
                     canvas.appendChild(itemEl);
+                    setupDraggable(itemEl, index);
+                    setupResizable(itemEl, index);
                 });
             } else {
-                canvas.innerHTML = '<div class="canvas-placeholder">스크랩북이 비어있습니다</div>';
+                canvas.innerHTML = `<div class="canvas-placeholder">스크랩북이 비어있습니다</div>`;
             }
         }
 
