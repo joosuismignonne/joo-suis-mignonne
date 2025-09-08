@@ -460,20 +460,3 @@ function ImageInspector({ sel, update }: { sel: ImageItem; update: (p: Partial<I
         <input className="w-full bg-white/10 rounded px-2 py-1 text-xs" placeholder="caption..." value={sel.caption||''} onChange={(e)=>update({caption: e.target.value})} />
       )}
     </div>
-  );
-}
-
-/*
-VINTAGE SCRAPBOOK — what’s included
-- 자유 배치 + 드래그/스케일/회전 + Z 순서
-- 사진: Polaroid/Magazine/None 프레임, 필름 필터(contrast/saturate/sepia/blur/brightness + grain), 캡션
-- 글: 손글씨 폰트(Caveat/Nanum Pen/Gochi/Shadow), stroke/vertical/italic/그림자
-- 펜 드로잉
-- 배경색/이미지, 페이지 여백, 저장/불러오기, PNG 내보내기(html2canvas 사용)
-- 오토 레이아웃(룰 기반): Polaroid 2x2, 매거진, 사진+핸드라이팅 — 서버 AI로 대체 가능
-
-다음 확장 아이디어
-- 업로드한 사진/문장 → 서버 AI가 템플릿/타이포/프레임 선택 후 파라미터 반환 → 위 상태(state)에 주입
-- 배경지(격자/도트/신문지) 프리셋, 한글/일문 세로조판 스타일 템플릿
-- 모바일 터치(핀치 회전/스케일), 그룹 선택/정렬 가이드, 멀티 선택
-*/
