@@ -65,7 +65,7 @@
             justify-content: center;
             text-align: center;
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                        url('https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=2070&auto=format&fit=crop');
+                        url('https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -103,7 +103,12 @@
         .diary-entry {
             margin-bottom: 60px;
             padding: 40px 0;
+            border-bottom: 1px solid #eee;
             position: relative;
+        }
+        
+        .diary-entry:last-child {
+            border-bottom: none;
         }
 
         /* Entry Header */
@@ -111,9 +116,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
         }
 
         .entry-date {
@@ -127,25 +130,25 @@
         }
         
         .action-btn {
-            background-color: #f0f0f0;
+            background-color: transparent;
             border: 1px solid #ddd;
             color: #555;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 3px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
+        
         .action-btn:hover {
             background-color: #e0e0e0;
         }
-        
+
         .entry-title {
             font-family: 'Noto Sans KR', sans-serif;
             font-size: 2rem;
             color: #2c2c2c;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             line-height: 1.2;
             font-weight: 700;
         }
@@ -155,7 +158,7 @@
             font-size: 1rem;
             color: #4a4a4a;
             line-height: 1.8;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
         /* 스크랩북 캔버스 */
@@ -180,25 +183,19 @@
         .scrapbook-item {
             position: absolute;
             cursor: move;
+            user-select: none;
             border: 1px solid transparent;
             transition: border 0.2s ease, box-shadow 0.2s ease;
-            user-select: none;
         }
 
-        .scrapbook-item:hover, .scrapbook-item.active {
+        .scrapbook-item:hover {
             border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
         .scrapbook-photo {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* 이미지 비율 유지 */
-            background-color: #000;
-        }
-
-        .scrapbook-item.styled-photo .scrapbook-photo {
-            filter: grayscale(100%);
+            object-fit: contain;
         }
 
         /* 크기 조절 핸들 */
@@ -429,7 +426,7 @@
                 <div class="form-group">
                     <label>AI 이미지 생성</label>
                     <select id="imageStyleSelector">
-                        <option value="none">스타일 선택</option>
+                        <option value="">스타일 선택</option>
                         <option value="hand-drawn">손그림 스케치</option>
                         <option value="watercolor">수채화 필름</option>
                         <option value="vintage">빈티지 필름</option>
@@ -460,7 +457,7 @@
     <script>
         let entries = [
             {
-                id: 1, type: 'diary', title: '나의 첫 AI 스크랩북',
+                id: 1, title: '나의 첫 AI 스크랩북',
                 content: 'AI가 만들어준 첫 스크랩북! 간단하게 사진만 올렸는데 이렇게 멋지게 완성되다니 정말 신기하고 재밌다.',
                 date: '2025.09.08', scrapbookItems: [
                     { type: 'photo', content: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=200&h=200&fit=crop', x: 20, y: 30, width: 200, height: 200, style: 'vintage' }
@@ -473,28 +470,18 @@
         let currentScrapbookItems = [];
         let uploadedPhoto = null;
 
+        const aiStyleImages = {
+            'hand-drawn': 'https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=200&h=200&fit=crop&style=hand-drawn',
+            'watercolor': 'https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=200&h=200&fit=crop&style=watercolor',
+            'vintage': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=200&h=200&fit=crop&style=vintage'
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             renderEntries();
             document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
             document.querySelector('#photoInput').addEventListener('change', handlePhotoUpload);
-            document.querySelector('#imageStyleSelector').addEventListener('change', applyAIStyle);
+            document.querySelector('#imageStyleSelector').addEventListener('change', renderAIImage);
         });
-
-        const aiStyles = {
-            'hand-drawn': {
-                filter: 'saturate(1.5) contrast(1.2)',
-                border: '3px dashed #333'
-            },
-            'watercolor': {
-                filter: 'sepia(0.5) hue-rotate(30deg) blur(1px)',
-                border: '5px solid #fff',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
-            },
-            'vintage': {
-                filter: 'sepia(0.8) grayscale(0.5)',
-                border: '5px solid #fff'
-            }
-        };
 
         function openPhotoUploader() {
             document.getElementById('photoInput').click();
@@ -512,36 +499,36 @@
             }
         }
 
-        function applyAIStyle() {
-            if (!uploadedPhoto) {
-                showNotification('사진을 먼저 업로드해주세요.');
-                return;
-            }
-            renderAIImage();
-        }
-
         function renderAIImage() {
             const canvas = document.getElementById('scrapbookCanvas');
             canvas.innerHTML = '';
             
+            if (!uploadedPhoto) {
+                canvas.innerHTML = `<div class="canvas-placeholder">사진을 업로드하고 스타일을 선택해주세요.</div>`;
+                return;
+            }
+
             const style = document.getElementById('imageStyleSelector').value;
-            const styleData = aiStyles[style] || {};
+            let imageSrc = uploadedPhoto;
+
+            if (style && aiStyleImages[style]) {
+                imageSrc = aiStyleImages[style];
+            }
 
             currentScrapbookItems = [{
                 type: 'photo',
-                content: uploadedPhoto,
+                content: imageSrc,
                 x: 50, y: 50,
                 width: 300, height: 300,
-                style
+                style: style
             }];
 
             renderEditableItems();
-            if (style !== 'none') {
+            if (style) {
                 showNotification(`AI가 '${document.getElementById('imageStyleSelector').options[document.getElementById('imageStyleSelector').selectedIndex].text}' 스타일로 변환했어요!`);
             }
         }
         
-        // 다이어리 목록 렌더링
         function renderEntries() {
             const container = document.getElementById('entries-container');
             container.innerHTML = '';
@@ -552,7 +539,6 @@
             });
         }
         
-        // 다이어리 HTML 생성
         function createEntryHTML(entry) {
             return `
                 <article class="diary-entry" data-id="${entry.id}">
@@ -570,7 +556,6 @@
             `;
         }
         
-        // 스크랩북 아이템 렌더링
         function renderScrapbookItems(entryId, items) {
             const canvas = document.getElementById(`canvas-${entryId}`);
             if (!canvas) return;
@@ -589,10 +574,6 @@
                         const img = document.createElement('img');
                         img.src = item.content;
                         img.className = 'scrapbook-photo';
-                        const styleData = aiStyles[item.style] || {};
-                        if (styleData.filter) img.style.filter = styleData.filter;
-                        if (styleData.border) img.style.border = styleData.border;
-                        if (styleData.boxShadow) img.style.boxShadow = styleData.boxShadow;
                         itemEl.appendChild(img);
                     }
                     canvas.appendChild(itemEl);
@@ -602,7 +583,6 @@
             }
         }
 
-        // 모달 열기
         function openModal(mode, id = null) {
             const modal = document.getElementById('modal');
             const titleEl = modal.querySelector('.modal-title');
@@ -625,19 +605,17 @@
                     document.getElementById('contentBody').value = entry.content;
                     currentScrapbookItems = JSON.parse(JSON.stringify(entry.scrapbookItems || []));
                     uploadedPhoto = currentScrapbookItems[0].content;
-                    document.getElementById('imageStyleSelector').value = currentScrapbookItems[0].style || 'none';
+                    document.getElementById('imageStyleSelector').value = currentScrapbookItems[0].style || '';
                     renderEditableItems();
                 }
             }
             modal.style.display = 'block';
         }
 
-        // 모달 닫기
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
 
-        // 스크랩북 아이템 편집/이동/크기 조절
         function renderEditableItems() {
             const canvas = document.getElementById('scrapbookCanvas');
             canvas.innerHTML = '';
@@ -655,10 +633,6 @@
                         const img = document.createElement('img');
                         img.src = item.content;
                         img.className = 'scrapbook-photo';
-                        const styleData = aiStyles[item.style] || {};
-                        if (styleData.filter) img.style.filter = styleData.filter;
-                        if (styleData.border) img.style.border = styleData.border;
-                        if (styleData.boxShadow) img.style.boxShadow = styleData.boxShadow;
                         itemEl.appendChild(img);
                     }
                     
@@ -796,11 +770,13 @@
             noti.className = 'notification';
             noti.textContent = message;
             document.body.appendChild(noti);
+            
+            // Wait for element to be added to DOM before applying transition
             setTimeout(() => {
                 noti.style.opacity = '1';
                 setTimeout(() => {
                     noti.style.opacity = '0';
-                    setTimeout(() => noti.remove(), 300);
+                    setTimeout(() => noti.remove(), 300); // Clean up after transition
                 }, 3000);
             }, 10);
         }
