@@ -217,22 +217,23 @@
 
         .preview-color {
             filter: 
-                sepia(35%) 
-                saturate(140%) 
-                contrast(125%) 
-                brightness(108%) 
-                hue-rotate(15deg)
-                blur(0.3px);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.15);
+                sepia(25%) 
+                saturate(115%) 
+                contrast(108%) 
+                brightness(112%) 
+                hue-rotate(8deg)
+                opacity(0.95);
+            box-shadow: inset 0 0 30px rgba(255,200,120,0.12);
         }
 
         .preview-bw {
             filter: 
                 grayscale(100%) 
-                contrast(130%) 
-                brightness(102%)
-                blur(0.3px);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+                contrast(115%) 
+                brightness(105%)
+                sepia(8%)
+                opacity(0.92);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.18);
         }
 
         .generate-btn {
@@ -271,30 +272,31 @@
             position: relative;
         }
 
-        /* Color (Kodak film) style - 더 강한 필름 느낌 */
+        /* Color (Canon/Fuji Film) style - 부드럽고 따뜻한 필름 느낌 */
         .page-photo.color {
             filter: 
-                sepia(35%) 
-                saturate(140%) 
-                contrast(125%) 
-                brightness(108%) 
-                hue-rotate(15deg)
-                blur(0.3px);
-            /* 검은색 부분 강조를 위한 그림자 */
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.15);
+                sepia(25%) 
+                saturate(115%) 
+                contrast(108%) 
+                brightness(112%) 
+                hue-rotate(8deg)
+                opacity(0.95);
+            /* 부드러운 빈티지 오버레이 */
+            box-shadow: inset 0 0 80px rgba(255,200,120,0.12);
         }
 
-        /* Black & White style - 더 강한 대비 */
+        /* Black & White style - 60-70년대 느낌 */
         .page-photo.bw {
             filter: 
                 grayscale(100%) 
-                contrast(130%) 
-                brightness(102%)
-                blur(0.3px);
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.2);
+                contrast(115%) 
+                brightness(105%)
+                sepia(8%)
+                opacity(0.92);
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.18);
         }
 
-        /* 필름 그레인 효과 강화 */
+        /* 부드러운 필름 그레인 효과 */
         .page-photo::after {
             content: '';
             position: absolute;
@@ -303,12 +305,13 @@
             width: 100%;
             height: 100%;
             background-image: 
-                radial-gradient(circle at 20% 80%, transparent 50%, rgba(255,255,255,0.08) 100%),
-                radial-gradient(circle at 80% 20%, transparent 50%, rgba(255,255,255,0.08) 100%),
-                radial-gradient(circle at 40% 40%, transparent 50%, rgba(0,0,0,0.12) 100%),
-                repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px);
+                radial-gradient(circle at 25% 75%, transparent 60%, rgba(255,220,180,0.04) 100%),
+                radial-gradient(circle at 75% 25%, transparent 60%, rgba(255,240,200,0.04) 100%),
+                radial-gradient(circle at 50% 50%, transparent 70%, rgba(0,0,0,0.06) 100%),
+                repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px);
             pointer-events: none;
-            mix-blend-mode: overlay;
+            mix-blend-mode: soft-light;
+            opacity: 0.7;
         }
 
         .page-content {
@@ -707,7 +710,7 @@
                         <div class="preview-styles">
                             <div class="preview-item">
                                 <img id="colorPreview" src="" alt="Color Preview" class="preview-color">
-                                <span>Color (Kodak)</span>
+                                <span>Color Film</span>
                             </div>
                             <div class="preview-item">
                                 <img id="bwPreview" src="" alt="B&W Preview" class="preview-bw">
@@ -725,7 +728,7 @@
                     <div class="form-group">
                         <label>Photo Style</label>
                         <select id="photoStyle">
-                            <option value="color">Color (Kodak Film)</option>
+                            <option value="color">Color Film</option>
                             <option value="bw">Black & White</option>
                         </select>
                     </div>
@@ -931,111 +934,3 @@
                             <button class="edit-btn" onclick="editEntry(${entry.id})">Edit</button>
                             <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
                         </div>
-                        <h3 class="page-title" onclick="editEntry(${entry.id})">${entry.title}</h3>
-                        <p class="page-text" onclick="editEntry(${entry.id})">${entry.content}</p>
-                        <div class="page-date">${entry.date}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Travel Map Functions
-        function addPlace() {
-            const country = document.getElementById('countryInput').value.trim();
-            const place = document.getElementById('placeInput').value.trim();
-            const type = document.getElementById('placeType').value;
-
-            if (!country || !place) {
-                alert('Please enter country and place name');
-                return;
-            }
-
-            const newPlace = {
-                id: Date.now(),
-                country: country,
-                place: place,
-                type: type,
-                x: Math.random() * 80 + 10,
-                y: Math.random() * 60 + 20
-            };
-
-            travelData.push(newPlace);
-            renderMap();
-            renderCountries();
-
-            document.getElementById('countryInput').value = '';
-            document.getElementById('placeInput').value = '';
-        }
-
-        function renderMap() {
-            const map = document.getElementById('worldMap');
-            const existingMarkers = map.querySelectorAll('.map-marker');
-            existingMarkers.forEach(marker => marker.remove());
-
-            travelData.forEach(place => {
-                const marker = document.createElement('div');
-                marker.className = `map-marker marker-${place.type}`;
-                marker.style.left = place.x + '%';
-                marker.style.top = place.y + '%';
-
-                marker.innerHTML = `<div class="marker-tooltip">${place.place}, ${place.country}</div>`;
-                map.appendChild(marker);
-            });
-        }
-
-        function renderCountries() {
-            const grid = document.getElementById('countriesGrid');
-            const countries = {};
-
-            travelData.forEach(place => {
-                if (!countries[place.country]) {
-                    countries[place.country] = [];
-                }
-                countries[place.country].push(place);
-            });
-
-            grid.innerHTML = '';
-            Object.keys(countries).forEach(country => {
-                const places = countries[country];
-                const card = document.createElement('div');
-                card.className = 'country-card';
-                card.innerHTML = `
-                    <div class="country-name">${country}</div>
-                    <div class="country-places">
-                        ${places.map(p => `${p.place} (${p.type})`).join(', ')}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // Initialize with sample data
-        window.addEventListener('load', function() {
-            const sampleEntry = {
-                id: 1,
-                photo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23e5e5e5"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-family="Arial" font-size="18">Sample Photo</text></svg>',
-                photoStyle: 'color',
-                title: 'Your memories will appear here',
-                content: 'Upload a photo and write your story to create beautiful minimal entries. Click to edit this text or delete this sample entry.',
-                date: new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                })
-            };
-            
-            scrapbookData.push(sampleEntry);
-            renderScrapbook();
-
-            // Sample travel data
-            travelData.push(
-                { id: 1, country: 'Japan', place: 'Tokyo Tower', type: 'attraction', x: 75, y: 35 },
-                { id: 2, country: 'Japan', place: 'Ramen Shop', type: 'restaurant', x: 76, y: 36 },
-                { id: 3, country: 'France', place: 'Eiffel Tower', type: 'attraction', x: 45, y: 30 }
-            );
-            renderMap();
-            renderCountries();
-        });
-    </script>
-</body>
-</html>
