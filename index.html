@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Scrapbook</title>
+    <title>My Digital Scrapbook</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Jua&family=Dongle:wght@300;400;700&family=Hi+Melody&family=Gaegu&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* 기본 스타일 */
         * {
@@ -19,498 +19,422 @@
             font-family: 'Noto Sans KR', sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #f0f2f5;
+            background-color: #f7f7f7;
             font-size: 16px;
+            overflow: hidden;
+            user-select: none;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        /* 메인 컨테이너 */
+        .app-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header */
+        /* 헤더 (툴바) */
         header {
             background-color: #fff;
             border-bottom: 1px solid #ddd;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            text-decoration: none;
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                        url('https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 500px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .hero-subtitle {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
-            margin-top: 10px;
-        }
-
-        /* Main Content - Pinterest/Magazine Layout */
-        .main-content {
-            padding: 80px 0;
-            columns: 3;
-            column-gap: 20px;
-        }
-        
-        .diary-entry {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            break-inside: avoid;
-            position: relative;
-        }
-
-        .entry-header {
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .entry-date {
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        .entry-actions {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .diary-entry:hover .entry-actions {
-            opacity: 1;
-        }
-        
-        .action-btn {
-            background-color: transparent;
-            border: none;
-            color: #555;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .action-btn:hover {
-            color: #007bff;
-        }
-        
-        .entry-title {
-            font-size: 1.2rem;
+        .logo {
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 10px;
+            color: #333;
         }
 
-        .entry-content {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .scrapbook-items {
+        .tools {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .scrapbook-item-image {
-            width: 100%;
-            height: auto;
+        .tool-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
             border-radius: 5px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            backdrop-filter: blur(5px);
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 30px;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 1rem;
-        }
-        
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        
-        .photo-upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
             cursor: pointer;
+            font-size: 14px;
             transition: all 0.2s ease;
         }
 
-        .photo-upload-area:hover {
-            border-color: #007bff;
-            background-color: #f0f8ff;
-        }
-        
-        .photo-preview {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+        .tool-btn:hover {
+            background-color: #e0e0e0;
         }
 
-        .photo-preview img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            background-color: #f0f0f0;
-            color: #555;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
+        .tool-btn.active {
             background-color: #007bff;
             color: white;
             border-color: #007bff;
         }
 
-        /* Footer */
-        footer {
-            background-color: #f0f2f5;
-            padding: 40px 0;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                columns: 2;
-            }
+        /* 메인 캔버스 영역 */
+        .canvas-area {
+            flex-grow: 1;
+            position: relative;
+            background-color: #e8e6e1; /* 종이 질감 */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAACzKpkBAAAAG0lEQVR42mP4//8/w38GIAXDjOAMwhgAEgEAIC9ohtx6xXUAAAAASUVORK5CYII='); /* 미세한 종이 질감 패턴 */
+            overflow: hidden;
         }
 
-        @media (max-width: 480px) {
-            .main-content {
-                columns: 1;
-            }
+        /* 스크랩북 아이템 */
+        .scrapbook-item {
+            position: absolute;
+            transform-origin: 50% 50%;
+            touch-action: none;
+            cursor: grab;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        .scrapbook-item.active {
+            border-color: #007bff;
+            z-index: 100;
+        }
+
+        .item-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* 이미지 아이템 */
+        .item-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.1) contrast(1.1) saturate(1.2);
+            mix-blend-mode: multiply; /* 필름 그레인 효과를 위한 블렌딩 */
+        }
+        
+        .item-image.vintage::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://grain-generator.s3.amazonaws.com/grain-3.png');
+            opacity: 0.1;
+            mix-blend-mode: overlay;
+        }
+        
+        /* 텍스트 아이템 */
+        .item-text {
+            border: none;
+            background: rgba(255, 255, 255, 0.7);
+            resize: none;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            outline: none;
+            font-size: 18px;
+            line-height: 1.4;
+        }
+
+        /* 크기 조절 핸들 */
+        .resize-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #007bff;
+            border: 2px solid white;
+            border-radius: 50%;
+            right: -8px;
+            bottom: -8px;
+            cursor: nwse-resize;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scrapbook-item.active .resize-handle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 회전 핸들 */
+        .rotate-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #007bff;
+            border: 2px solid white;
+            border-radius: 50%;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: crosshair;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scrapbook-item.active .rotate-handle {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 글씨체 선택 메뉴 */
+        .font-selector {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; /* 초기 숨김 */
+            z-index: 200;
+        }
+
+        .font-selector span {
+            display: block;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .font-selector span:hover {
+            background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#" class="logo">My Scrapbook</a>
+    <div class="app-container">
+        <header>
+            <div class="logo">My Scrapbook</div>
+            <div class="tools">
+                <button id="addPhotoBtn" class="tool-btn">사진 추가</button>
+                <button id="addTextBtn" class="tool-btn">텍스트 추가</button>
+                <button id="saveBtn" class="tool-btn">저장</button>
+                <input type="file" id="photoInput" accept="image/*" style="display:none;">
             </div>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">My Scrapbook</h1>
-            <p class="hero-subtitle">나만의 감각적인 스크랩북 만들기</p>
-        </div>
-    </section>
-
-    <section class="main-content container" id="entries-container">
-        </section>
-
-    <button class="create-btn" onclick="openModal('create')">+</button>
-
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">새로운 스크랩 만들기</h3>
+        </header>
+        <div class="canvas-area" id="canvasArea">
             </div>
-            
-            <form id="createForm">
-                <div class="form-group">
-                    <label>제목</label>
-                    <input type="text" id="contentTitle" placeholder="제목을 입력하세요">
-                </div>
-                
-                <div class="form-group">
-                    <label>내용</label>
-                    <textarea id="contentBody" placeholder="내용을 입력하세요" rows="4"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>사진 추가</label>
-                    <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
-                        <p>사진을 클릭하거나 드래그해서 추가하세요</p>
-                    </div>
-                    <input type="file" id="photoInput" multiple accept="image/*" style="display:none;">
-                    <div class="photo-preview" id="photoPreview"></div>
-                </div>
-            </form>
-            
-            <div class="form-actions">
-                <button type="button" class="btn" onclick="closeModal()">취소</button>
-                <button type="button" class="btn btn-primary" onclick="saveContent()">저장</button>
-            </div>
-        </div>
     </div>
-
-    <footer>
-        <p>© 2025 My Scrapbook. All rights reserved.</p>
-    </footer>
-
+    
     <script>
-        let entries = [
-            {
-                id: 1, title: '오늘은 날씨가 좋네요', content: '가볍게 산책을 하며 여유로운 시간을 보냈습니다. 사진으로 남긴 순간들이 소중하게 느껴지는 하루였어요.', date: '2025.09.08', photos: ['https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=400&h=auto&fit=crop']
-            },
-            {
-                id: 2, title: '새로운 카페 발견!', content: '동네에 새로 생긴 카페에 가봤는데, 분위기가 너무 좋아서 앞으로 자주 오게 될 것 같아요. 라떼 맛도 최고!', date: '2025.09.07', photos: ['https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=400&h=auto&fit=crop', 'https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=400&h=auto&fit=crop']
-            },
-            {
-                id: 3, title: '영화 후기', content: '최근에 본 영화에 대한 감상평을 남깁니다. 배우들의 연기가 정말 인상 깊었어요.', date: '2025.09.06', photos: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=400&h=auto&fit=crop']
-            }
+        const canvasArea = document.getElementById('canvasArea');
+        const addPhotoBtn = document.getElementById('addPhotoBtn');
+        const addTextBtn = document.getElementById('addTextBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const photoInput = document.getElementById('photoInput');
+        
+        let activeItem = null;
+        let isDragging = false;
+        let isResizing = false;
+        let isRotating = false;
+        
+        // 폰트 목록
+        const fonts = [
+            'Noto Sans KR',
+            'Nanum Pen Script',
+            'Jua',
+            'Dongle',
+            'Hi Melody'
         ];
 
-        let nextId = entries.length + 1;
-        let currentEditId = null;
-        let currentPhotos = [];
-
-        document.addEventListener('DOMContentLoaded', renderEntries);
-        document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
-        
-        function renderEntries() {
-            const container = document.getElementById('entries-container');
-            container.innerHTML = '';
-            entries.forEach(entry => {
-                const entryEl = document.createElement('article');
-                entryEl.className = 'diary-entry';
-                entryEl.dataset.id = entry.id;
-                entryEl.innerHTML = `
-                    <div class="entry-header">
-                        <span class="entry-date">${entry.date}</span>
-                        <div class="entry-actions">
-                            <button class="action-btn" onclick="editEntry(${entry.id})">편집</button>
-                            <button class="action-btn" onclick="deleteEntry(${entry.id})">삭제</button>
-                        </div>
-                    </div>
-                    <h3 class="entry-title">${entry.title}</h3>
-                    <div class="entry-content">${entry.content}</div>
-                    <div class="scrapbook-items">
-                        ${entry.photos.map(photo => `<img src="${photo}" class="scrapbook-item-image">`).join('')}
-                    </div>
-                `;
-                container.appendChild(entryEl);
-            });
-        }
-
-        function openModal(mode, id = null) {
-            const modal = document.getElementById('modal');
-            const form = document.getElementById('createForm');
-            const titleEl = document.querySelector('.modal-title');
+        document.addEventListener('DOMContentLoaded', () => {
+            addPhotoBtn.addEventListener('click', () => photoInput.click());
+            addTextBtn.addEventListener('click', addTextItem);
             
-            form.reset();
-            currentPhotos = [];
-            document.getElementById('photoPreview').innerHTML = '';
-            currentEditId = id;
-
-            if (mode === 'create') {
-                titleEl.textContent = '새로운 스크랩 만들기';
-            } else if (mode === 'edit') {
-                titleEl.textContent = '스크랩 편집하기';
-                const entry = entries.find(e => e.id === id);
-                if (entry) {
-                    document.getElementById('contentTitle').value = entry.title;
-                    document.getElementById('contentBody').value = entry.content;
-                    currentPhotos = [...entry.photos];
-                    updatePhotoPreview();
+            canvasArea.addEventListener('mousedown', (e) => {
+                if (!e.target.closest('.scrapbook-item')) {
+                    if (activeItem) {
+                        activeItem.classList.remove('active');
+                        activeItem = null;
+                    }
                 }
-            }
-            modal.style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-        
-        function handlePhotoUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentPhotos.push(e.target.result);
-                    updatePhotoPreview();
-                };
-                reader.readAsDataURL(file);
             });
-        }
-
-        function updatePhotoPreview() {
-            const preview = document.getElementById('photoPreview');
-            preview.innerHTML = '';
-            currentPhotos.forEach(photo => {
-                const img = document.createElement('img');
-                img.src = photo;
-                preview.appendChild(img);
-            });
-        }
-
-        function saveContent() {
-            const title = document.getElementById('contentTitle').value;
-            const content = document.getElementById('contentBody').value;
             
-            if (!title.trim() || !content.trim()) {
-                alert('제목과 내용을 입력해주세요.');
-                return;
-            }
-            
-            const newEntry = {
-                id: nextId++,
-                title, content,
-                date: new Date().toLocaleDateString('ko-KR'),
-                photos: currentPhotos
-            };
-            
-            if (currentEditId) {
-                const entryIndex = entries.findIndex(e => e.id === currentEditId);
-                if (entryIndex !== -1) {
-                    entries[entryIndex] = { ...newEntry, id: currentEditId };
-                }
-            } else {
-                entries.unshift(newEntry);
-            }
-            
-            renderEntries();
-            closeModal();
-        }
-
-        function editEntry(id) {
-            openModal('edit', id);
-        }
-
-        function deleteEntry(id) {
-            if (confirm('정말로 이 스크랩을 삭제하시겠어요?')) {
-                entries = entries.filter(e => e.id !== id);
-                renderEntries();
-            }
-        }
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            document.querySelector('.photo-upload-area').addEventListener(eventName, preventDefaults, false);
+            photoInput.addEventListener('change', handlePhotoUpload);
         });
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        function handlePhotoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    addPhotoItem(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        document.querySelector('.photo-upload-area').addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            document.getElementById('photoInput').files = dt.files;
-            handlePhotoUpload({ target: document.getElementById('photoInput') });
+        function addPhotoItem(src) {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'scrapbook-item';
+            itemEl.style.width = '250px';
+            itemEl.style.height = '250px';
+            itemEl.style.left = `${(canvasArea.offsetWidth / 2) - 125}px`;
+            itemEl.style.top = `${(canvasArea.offsetHeight / 2) - 125}px`;
+
+            const imgEl = document.createElement('img');
+            imgEl.src = src;
+            imgEl.className = 'item-image vintage';
+            itemEl.appendChild(imgEl);
+            
+            // 크기 조절 및 회전 핸들 추가
+            itemEl.innerHTML += `
+                <div class="resize-handle"></div>
+                <div class="rotate-handle"></div>
+            `;
+            
+            canvasArea.appendChild(itemEl);
+            setupInteractions(itemEl);
+        }
+        
+        function addTextItem() {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'scrapbook-item';
+            itemEl.style.width = '200px';
+            itemEl.style.height = '100px';
+            itemEl.style.left = `${(canvasArea.offsetWidth / 2) - 100}px`;
+            itemEl.style.top = `${(canvasArea.offsetHeight / 2) - 50}px`;
+            
+            const textEl = document.createElement('textarea');
+            textEl.className = 'item-text';
+            textEl.value = '새로운 텍스트';
+            textEl.style.fontFamily = `'${fonts[0]}'`;
+            itemEl.appendChild(textEl);
+            
+            // 텍스트 편집기 기능
+            textEl.addEventListener('focus', (e) => {
+                showFontSelector(e.target);
+            });
+            textEl.addEventListener('blur', () => {
+                setTimeout(hideFontSelector, 200);
+            });
+
+            // 크기 조절 및 회전 핸들 추가
+            itemEl.innerHTML += `
+                <div class="resize-handle"></div>
+                <div class="rotate-handle"></div>
+            `;
+            
+            canvasArea.appendChild(itemEl);
+            setupInteractions(itemEl);
+        }
+        
+        function setupInteractions(itemEl) {
+            let initialX, initialY, initialMouseX, initialMouseY, initialAngle, initialWidth, initialHeight;
+
+            itemEl.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('resize-handle')) {
+                    isResizing = true;
+                    e.stopPropagation();
+                    initialMouseX = e.clientX;
+                    initialMouseY = e.clientY;
+                    initialWidth = itemEl.offsetWidth;
+                    initialHeight = itemEl.offsetHeight;
+                } else if (e.target.classList.contains('rotate-handle')) {
+                    isRotating = true;
+                    e.stopPropagation();
+                    const rect = itemEl.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const dx = e.clientX - centerX;
+                    const dy = e.clientY - centerY;
+                    initialAngle = Math.atan2(dy, dx) * 180 / Math.PI - (getRotation(itemEl) || 0);
+                } else {
+                    isDragging = true;
+                    e.stopPropagation();
+                    initialX = itemEl.offsetLeft;
+                    initialY = itemEl.offsetTop;
+                    initialMouseX = e.clientX;
+                    initialMouseY = e.clientY;
+                }
+                
+                if (activeItem) {
+                    activeItem.classList.remove('active');
+                }
+                activeItem = itemEl;
+                activeItem.classList.add('active');
+            });
+            
+            canvasArea.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - initialMouseX;
+                    const dy = e.clientY - initialMouseY;
+                    itemEl.style.left = `${initialX + dx}px`;
+                    itemEl.style.top = `${initialY + dy}px`;
+                }
+                if (isResizing) {
+                    const dx = e.clientX - initialMouseX;
+                    const dy = e.clientY - initialMouseY;
+                    itemEl.style.width = `${Math.max(initialWidth + dx, 50)}px`;
+                    itemEl.style.height = `${Math.max(initialHeight + dy, 50)}px`;
+                }
+                if (isRotating) {
+                    const rect = itemEl.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const dx = e.clientX - centerX;
+                    const dy = e.clientY - centerY;
+                    const newAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    const rotation = newAngle - initialAngle;
+                    itemEl.style.transform = `rotate(${rotation}deg)`;
+                }
+            });
+
+            canvasArea.addEventListener('mouseup', () => {
+                isDragging = false;
+                isResizing = false;
+                isRotating = false;
+            });
+        }
+        
+        function getRotation(element) {
+            const style = window.getComputedStyle(element, null);
+            const transform = style.getPropertyValue('transform');
+            if (transform === 'none') return 0;
+            const matrix = transform.split('(')[1].split(')')[0].split(',');
+            const a = matrix[0];
+            const b = matrix[1];
+            return Math.round(Math.atan2(b, a) * (180 / Math.PI));
+        }
+
+        function showFontSelector(targetTextarea) {
+            let fontSelector = document.querySelector('.font-selector');
+            if (!fontSelector) {
+                fontSelector = document.createElement('div');
+                fontSelector.className = 'font-selector';
+                fonts.forEach(font => {
+                    const span = document.createElement('span');
+                    span.textContent = font;
+                    span.style.fontFamily = `'${font}'`;
+                    span.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        targetTextarea.style.fontFamily = `'${font}'`;
+                        hideFontSelector();
+                    });
+                    fontSelector.appendChild(span);
+                });
+                document.body.appendChild(fontSelector);
+            }
+            const rect = targetTextarea.getBoundingClientRect();
+            fontSelector.style.top = `${rect.bottom + 5}px`;
+            fontSelector.style.left = `${rect.left}px`;
+            fontSelector.style.display = 'block';
+        }
+
+        function hideFontSelector() {
+            const fontSelector = document.querySelector('.font-selector');
+            if (fontSelector) {
+                fontSelector.style.display = 'none';
+            }
+        }
+
+        saveBtn.addEventListener('click', () => {
+            alert('저장 기능이 구현되었습니다!');
+            // 실제로는 서버에 데이터를 전송하는 로직이 들어갑니다.
+            // 예시: localStorage.setItem('scrapbookData', JSON.stringify(items));
         });
     </script>
 </body>
