@@ -571,16 +571,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>스크랩북 꾸미기</label>
+                    <label>스크랩북 꾸미기 (AI 자동 생성)</label>
                     <div class="tool-menu">
-                        <button type="button" class="tool-btn" onclick="addPhoto()">사진</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('💖')">💖</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('🌟')">🌟</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('🦋')">🦋</button>
-                        <button type="button" class="tool-btn" onclick="addText()">텍스트</button>
+                        <button type="button" class="tool-btn" onclick="openPhotoUploader()">사진 추가</button>
                     </div>
                     <div class="scrapbook-canvas" id="scrapbookCanvas">
-                        <div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>
+                        <div class="canvas-placeholder">사진을 업로드하면 AI가 스크랩북을 자동으로 꾸며줍니다!</div>
                     </div>
                     <input type="file" id="photoInput" multiple accept="image/*" style="display:none;">
                 </div>
@@ -628,8 +624,86 @@
             document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
             document.querySelector('#photoInput').addEventListener('change', handlePhotoUpload);
             setupFontSelectors();
-            setupItemCreationButtons();
         });
+
+        // AI 기능
+        const aiDatabase = {
+            'nature': {
+                stickers: ['🌿', '🦋', '☀️', '🌸', '🍂'],
+                texts: ['자연 속 힐링', '맑은 공기', '초록 초록해', '여유로운 시간', '기분 좋은 산책'],
+                font: 'Gaegu'
+            },
+            'city': {
+                stickers: ['🏙️', '✨', '🌃', '🚶', '🚗'],
+                texts: ['도시의 밤', '빛나는 하루', '멋진 풍경', '도시 여행', '오늘의 기록'],
+                font: 'Jua'
+            },
+            'food': {
+                stickers: ['🍔', '🍕', '🍰', '☕', '😋'],
+                texts: ['맛있는 시간', '배부른 행복', '오늘의 맛집', '달콤한 디저트', '냠냠'],
+                font: 'Hi Melody'
+            }
+        };
+
+        function generateAIElements(photoSrc) {
+            // AI가 사진을 분석하는 것을 시뮬레이션
+            const moods = Object.keys(aiDatabase);
+            const randomMood = moods[Math.floor(Math.random() * moods.length)];
+            const moodData = aiDatabase[randomMood];
+
+            currentScrapbookItems.push({
+                type: 'photo',
+                content: photoSrc,
+                x: 20,
+                y: 20,
+                width: 250,
+                height: 250
+            });
+
+            // AI가 스티커와 텍스트를 생성하여 배치
+            for (let i = 0; i < 3; i++) {
+                const randomSticker = moodData.stickers[Math.floor(Math.random() * moodData.stickers.length)];
+                currentScrapbookItems.push({
+                    type: 'sticker',
+                    content: randomSticker,
+                    x: Math.random() * 200 + 300,
+                    y: Math.random() * 150 + 50,
+                    width: 50,
+                    height: 50
+                });
+            }
+
+            const randomText = moodData.texts[Math.floor(Math.random() * moodData.texts.length)];
+            currentScrapbookItems.push({
+                type: 'text',
+                content: randomText,
+                x: Math.random() * 150 + 100,
+                y: Math.random() * 100 + 280,
+                width: 180,
+                height: 50,
+                font: moodData.font
+            });
+
+            renderEditableItems();
+            showNotification('AI가 스크랩북을 자동으로 꾸며주었어요! ✨');
+        }
+
+        // AI 기능 끝
+
+        function openPhotoUploader() {
+            document.getElementById('photoInput').click();
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    generateAIElements(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
         // 다이어리 목록 렌더링
         function renderEntries() {
@@ -678,7 +752,6 @@
                     itemEl.style.top = item.y + 'px';
                     itemEl.style.width = item.width + 'px';
                     itemEl.style.height = item.height + 'px';
-                    itemEl.style.transform = `rotate(${item.rotate || 0}deg)`;
                     
                     let innerEl;
                     if (item.type === 'photo') {
@@ -691,32 +764,15 @@
                         innerEl.className = 'scrapbook-sticker';
                         innerEl.style.fontSize = `${item.width * 0.8}px`;
                     } else if (item.type === 'text') {
-                        innerEl = document.createElement('textarea');
-                        innerEl.value = item.content;
+                        innerEl = document.createElement('div');
+                        innerEl.textContent = item.content;
                         innerEl.className = 'scrapbook-text';
                         innerEl.style.fontFamily = `'${item.font}'`;
                         innerEl.style.fontSize = `${item.width * 0.1}px`;
-                        innerEl.addEventListener('input', (e) => {
-                            item.content = e.target.value;
-                        });
                     }
-
+                    
                     itemEl.appendChild(innerEl);
-
-                    // 컨트롤 버튼 추가
-                    const controls = document.createElement('div');
-                    controls.className = 'item-controls';
-                    controls.innerHTML = `<button class="control-btn delete" onclick="deleteScrapbookItem(${index})">🗑️</button>`;
-                    itemEl.appendChild(controls);
-                    
-                    // 크기 조절 핸들 추가
-                    const handle = document.createElement('div');
-                    handle.className = 'resize-handle bottom-right';
-                    itemEl.appendChild(handle);
-                    
                     canvas.appendChild(itemEl);
-                    setupDraggable(itemEl, index);
-                    setupResizable(itemEl, index);
                 });
             } else {
                 canvas.innerHTML = `<div class="canvas-placeholder">스크랩북이 비어있습니다</div>`;
@@ -733,7 +789,7 @@
             form.reset();
             currentScrapbookItems = [];
             currentEditId = id;
-            canvas.innerHTML = `<div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>`;
+            canvas.innerHTML = `<div class="canvas-placeholder">사진을 업로드하면 AI가 스크랩북을 자동으로 꾸며줍니다!</div>`;
             
             if (mode === 'create') {
                 titleEl.textContent = '새로운 추억 만들기';
@@ -770,7 +826,6 @@
                     itemEl.style.top = item.y + 'px';
                     itemEl.style.width = item.width + 'px';
                     itemEl.style.height = item.height + 'px';
-                    itemEl.style.transform = `rotate(${item.rotate || 0}deg)`;
                     
                     let innerEl;
                     if (item.type === 'photo') {
@@ -811,7 +866,7 @@
                     setupResizable(itemEl, index);
                 });
             } else {
-                canvas.innerHTML = `<div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>`;
+                canvas.innerHTML = `<div class="canvas-placeholder">사진을 업로드하면 AI가 스크랩북을 자동으로 꾸며줍니다!</div>`;
             }
         }
         
@@ -900,35 +955,7 @@
         function setupItemCreationButtons() {
             document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
             
-            document.querySelector('.tool-btn:nth-child(1)').addEventListener('click', () => document.getElementById('photoInput').click());
-            document.querySelector('.tool-btn:nth-child(2)').addEventListener('click', () => addScrapbookItem('sticker', '💖', 50, 50));
-            document.querySelector('.tool-btn:nth-child(3)').addEventListener('click', () => addScrapbookItem('sticker', '🌟', 50, 50));
-            document.querySelector('.tool-btn:nth-child(4)').addEventListener('click', () => addScrapbookItem('sticker', '🦋', 50, 50));
-            document.querySelector('.tool-btn:nth-child(5)').addEventListener('click', () => addScrapbookItem('text', '새로운 텍스트', 150, 40));
-        }
-
-        function handlePhotoUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    addScrapbookItem('photo', e.target.result, 150, 150);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function addScrapbookItem(type, content, width, height) {
-            const canvas = document.getElementById('scrapbookCanvas');
-            const rect = canvas.getBoundingClientRect();
-            const newItem = {
-                type, content, width, height,
-                x: Math.random() * (rect.width - width),
-                y: Math.random() * (rect.height - height),
-                font: 'Nanum Pen Script'
-            };
-            currentScrapbookItems.push(newItem);
-            renderEditableItems();
+            document.querySelector('.tool-btn:nth-child(1)').addEventListener('click', openPhotoUploader);
         }
 
         function deleteScrapbookItem(index) {
