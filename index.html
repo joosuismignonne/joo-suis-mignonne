@@ -1,4 +1,282 @@
-<!DOCTYPE html>
+<script>
+        // 글 데이터 저장 (실제로는 데이터베이스를 사용)
+        let entries = [
+            { id: 1, type: 'diary', title: '오늘의 커피 한 잔', content: '좋은 책과 함께하는 여유로운 오후...', date: 'September 8, 2024' },
+            { id: 2, type: 'diary', title: '미래에 대한 생각', content: '요즘 미래에 대해 생각할 일이 많다...', date: 'September 7, 2024' },
+            { id: 3, type: 'review', title: '작은 것들의 신', content: '아룬다티 로이의 섬세한 문체...', date: 'September 6, 2024' },
+            { id: 4, type: 'diary', title: '산책길의 작은 발견', content: '길가에서 만난 예쁜 꽃들...', date: 'September 5, 2024' },
+            { id: 5, type: 'review', title: '기생충', content: '봉준호 감독의 탁월한 연출...', date: 'September 4, 2024' },
+            { id: 6, type: 'diary', title: '감사한 하루의 마무리', content: '오늘 하루도 무사히 마무리...', date: 'September 2, 2024' }
+        ];
+
+        let currentEditId = null;
+
+        // 새 글 추가
+        function addNewEntry(type, title, content) {
+            const newId = Math.max(...entries.map(e => e.id)) + 1;
+            const newEntry = {
+                id: newId,
+                type: type,
+                title: title,
+                content: content,
+                date: new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })
+            };
+            
+            entries.unshift(newEntry); // 맨 앞에 추가
+            renderEntries(); // 화면 새로고침
+            
+            // 성공 메시지
+            showNotification('새 글이 추가되었습니다! 🎉');
+        }
+
+        // 글 삭제
+        function deleteEntry(id) {
+            if (confirm('정말로 이 글을 삭제하시겠습니까?')) {
+                entries = entries.filter(entry => entry.id !== id);
+                renderEntries();
+                showNotification('글이 삭제되었습니다.');
+            }
+        }
+
+        // 글 수정
+        function editEntry(id) {
+            const entry = entries.find(e => e.id === id);
+            if (entry) {
+                currentEditId = id;
+                document.getElementById('contentType').value = entry.type;
+                document.getElementById('contentTitle').value = entry.title;
+                document.getElementById('contentBody').value = entry.content;
+                
+                document.querySelector('.modal-title').textContent = '글 수정하기';
+                document.getElementById('modal').style.display = 'block';
+            }
+        }
+
+        // 글 목록 다시 그리기
+        function renderEntries() {
+            const container = document.querySelector('.main-content .container');
+            
+            // 기존 글들 제거
+            const existingEntries = container.querySelectorAll('.diary-entry');
+            existingEntries.forEach(entry => entry.remove());
+            
+            // 새로운 글들 추가
+            entries.forEach(entry => {
+                const entryHTML = createEntryHTML(entry);
+                container.insertAdjacentHTML('beforeend', entryHTML);
+            });
+            
+            // 애니메이션 다시 적용
+            applyScrollAnimations();
+        }
+
+        // 글 HTML 생성
+        function createEntryHTML(entry) {
+            const isReview = entry.type === 'review';
+            const reviewCategory = isReview ? '<span class="review-category">Book</span>' : '';
+            const reviewRating = isReview ? `
+                <div class="review-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="rating-text">5/5</span>
+                </div>
+            ` : '';
+            
+            return `
+                <article class="diary-entry ${isReview ? 'review' : ''}" data-id="${entry.id}" onclick="openModal('${entry.type}', ${entry.id})">
+                    <div class="entry-actions">
+                        <button class="action-btn edit" onclick="event.stopPropagation(); editEntry(${entry.id})" title="수정">✏️</button>
+                        <button class="action-btn delete" onclick="event.stopPropagation(); deleteEntry(${entry.id})" title="삭제">🗑️</button>
+                    </div>
+                    <div class="photo-side">
+                        <div class="photo-image">${getRandomEmoji()}</div>
+                    </div>
+                    <div class="text-side">
+                        <div class="entry-header">
+                            <div class="entry-date">${entry.date}</div>
+                        </div>
+                        ${reviewCategory}
+                        <h3 class="entry-title">${entry.title}</h3>
+                        ${reviewRating}
+                        <div class="entry-content">${entry.content}</div>
+                    </div>
+                </article>
+            `;
+        }
+
+        // 랜덤 이모지 생성
+        function getRandomEmoji() {
+            const emojis = ['📸', '🤔', '📚', '🌸', '🎬', '🌅', '☕', '💭', '🌻', '🎨', '📝', '🌙'];
+            return emojis[Math.floor(Math.random() * emojis.length)];
+        }
+
+        // 알림 표시
+        function showNotification(message) {
+            // 기존 알림 제거
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            // 새 알림 생성
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 40px;
+                background: #1a1a1a;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 3000;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // 애니메이션
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // 3초 후 제거
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // 스크롤 애니메이션 적용
+        function applyScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.diary-entry').forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(50px)';
+                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(item);
+            });
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header background change on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(254, 254, 254, 0.98)';
+                header.style.backdropFilter = 'blur(15px)';
+            } else {
+                header.style.background = 'rgba(254, 254, 254, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Modal functions
+        function openModal(type, id = null) {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'block';
+            
+            // 수정 모드가 아닌 경우 폼 초기화
+            if (!currentEditId) {
+                document.getElementById('createForm').reset();
+                if (type !== 'create') {
+                    document.getElementById('contentType').value = type;
+                }
+                
+                // Update modal title based on type
+                const modalTitle = document.querySelector('.modal-title');
+                const titles = {
+                    'diary': '새 다이어리 쓰기',
+                    'review': '새 리뷰 작성',
+                    'create': '새 글쓰기'
+                };
+                modalTitle.textContent = titles[type] || '새 글쓰기';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('createForm').reset();
+            currentEditId = null;
+            document.querySelector('.modal-title').textContent = '새 글쓰기';
+        }
+
+        function saveContent() {
+            const type = document.getElementById('contentType').value;
+            const title = document.getElementById('contentTitle').value;
+            const content = document.getElementById('contentBody').value;
+            
+            if (!title.trim() || !content.trim()) {
+                alert('제목과 내용을 입력해주세요.');
+                return;
+            }
+            
+            if (currentEditId) {
+                // 수정 모드
+                const entryIndex = entries.findIndex(e => e.id === currentEditId);
+                if (entryIndex !== -1) {
+                    entries[entryIndex].type = type;
+                    entries[entryIndex].title = title;
+                    entries[entryIndex].content = content;
+                    renderEntries();
+                    showNotification('글이 수정되었습니다! ✏️');
+                }
+            } else {
+                // 새 글 추가
+                addNewEntry(type, title, content);
+            }
+            
+            closeModal();
+        }
+
+        // Click outside modal to close
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('modal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 초기 스크롤 애니메이션 적용
+        document.addEventListener('DOMContentLoaded', function() {
+            applyScrollAnimations();
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
