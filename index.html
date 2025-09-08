@@ -1,517 +1,479 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joo suis mignonne</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* 기본 스타일 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+import React, { useEffect, useState } from "react";
 
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f0f2f5;
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+// Small helper: inject Google handwriting fonts for the vintage vibe
+const HandwritingFonts = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Nanum+Pen+Script&family=Gochi+Hand&family=Shadows+Into+Light&display=swap');
+  `}</style>
+);
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            text-decoration: none;
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 60vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                        url('https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 500px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .hero-subtitle {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 1.2rem;
-            color: rgba(255,255,255,0.9);
-            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
-            margin-top: 10px;
-        }
-
-        /* Main Content - Pinterest/Magazine Layout */
-        .main-content {
-            padding: 80px 0;
-            columns: 3; /* 3열 레이아웃 */
-            column-gap: 20px;
-        }
-        
-        .diary-entry {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            break-inside: avoid; /* 그리드 요소가 나뉘는 것을 방지 */
-            position: relative;
-        }
-
-        .entry-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .entry-date {
-            font-size: 0.8rem;
-            color: #999;
-        }
-
-        .entry-actions {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .diary-entry:hover .entry-actions {
-            opacity: 1;
-        }
-        
-        .action-btn {
-            background-color: transparent;
-            border: none;
-            color: #555;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .action-btn:hover {
-            color: #007bff;
-        }
-        
-        .entry-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .entry-content {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        .scrapbook-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .scrapbook-item-image {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            backdrop-filter: blur(5px);
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 30px;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: #555;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 1rem;
-        }
-        
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        
-        .photo-upload-area {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .photo-upload-area:hover {
-            border-color: #007bff;
-            background-color: #f0f8ff;
-        }
-        
-        .photo-preview {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .photo-preview img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            background-color: #f0f0f0;
-            color: #555;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #f0f2f5;
-            padding: 40px 0;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                columns: 2;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-content {
-                columns: 1;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#" class="logo">Joo suis mignonne</a>
-            </div>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Joo suis mignonne</h1>
-            <p class="hero-subtitle">나만의 감각적인 스크랩북 만들기</p>
-        </div>
-    </section>
-
-    <section class="main-content container" id="entries-container">
-        </section>
-
-    <button class="create-btn" onclick="openModal('create')">+</button>
-
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">새로운 스크랩 만들기</h3>
-            </div>
-            
-            <form id="createForm">
-                <div class="form-group">
-                    <label>제목</label>
-                    <input type="text" id="contentTitle" placeholder="제목을 입력하세요">
-                </div>
-                
-                <div class="form-group">
-                    <label>내용</label>
-                    <textarea id="contentBody" placeholder="내용을 입력하세요" rows="4"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>사진 추가</label>
-                    <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
-                        <p>사진을 클릭하거나 드래그해서 추가하세요</p>
-                    </div>
-                    <input type="file" id="photoInput" multiple accept="image/*" style="display:none;">
-                    <div class="photo-preview" id="photoPreview"></div>
-                </div>
-            </form>
-            
-            <div class="form-actions">
-                <button type="button" class="btn" onclick="closeModal()">취소</button>
-                <button type="button" class="btn btn-primary" onclick="saveContent()">저장</button>
-            </div>
-        </div>
+export default function VintageScrapbook() {
+  const [opened, setOpened] = useState(true);
+  return (
+    <div className="min-h-screen w-full bg-neutral-900 flex items-center justify-center p-4">
+      <HandwritingFonts />
+      <div className="relative w-[min(98vw,1200px)] h-[min(98vh,820px)] rounded-3xl overflow-hidden ring-1 ring-white/10 shadow-[0_40px_70px_-20px_rgba(0,0,0,0.6)]">
+        {/* subtle linen texture */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#111,transparent_40%),radial-gradient(circle_at_80%_0%,#0b0b0b,transparent_35%),radial-gradient(circle_at_50%_100%,#0d0d0d,transparent_40%)]"/>
+        {opened && <ScrapbookEditor onClose={()=>setOpened(false)} />}
+      </div>
     </div>
+  );
+}
 
-    <footer>
-        <p>© 2025 Joo suis mignonne. All rights reserved.</p>
-    </footer>
+// ──────────────────────────────────────────────────────────────────────────────
+// Types
+// ──────────────────────────────────────────────────────────────────────────────
 
-    <script>
-        let entries = [
-            {
-                id: 1, title: '오늘은 날씨가 좋네요', content: '가볍게 산책을 하며 여유로운 시간을 보냈습니다. 사진으로 남긴 순간들이 소중하게 느껴지는 하루였어요.', date: '2025.09.08', photos: ['https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=400&h=auto&fit=crop']
-            },
-            {
-                id: 2, title: '새로운 카페 발견!', content: '동네에 새로 생긴 카페에 가봤는데, 분위기가 너무 좋아서 앞으로 자주 오게 될 것 같아요. 라떼 맛도 최고!', date: '2025.09.07', photos: ['https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=400&h=auto&fit=crop', 'https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=400&h=auto&fit=crop']
-            },
-            {
-                id: 3, title: '영화 후기', content: '최근에 본 영화에 대한 감상평을 남깁니다. 배우들의 연기가 정말 인상 깊었어요.', date: '2025.09.06', photos: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=400&h=auto&fit=crop']
-            }
-        ];
+type ItemBase = {
+  id: string;
+  x: number; // px left
+  y: number; // px top
+  scale: number; // 1 = 100%
+  rotate: number; // deg
+  z: number; // z-index
+  type: "image" | "text" | "sticker" | "drawing";
+};
 
-        let nextId = entries.length + 1;
-        let currentEditId = null;
-        let currentPhotos = [];
+type ImageItem = ItemBase & {
+  type: "image";
+  src: string;
+  w?: number; h?: number;
+  filter: { contrast:number; saturate:number; sepia:number; blur:number; brightness:number; grain:boolean };
+  frame: "none" | "polaroid" | "magazine";
+  caption?: string;
+};
 
-        document.addEventListener('DOMContentLoaded', renderEntries);
-        document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
-        
-        function renderEntries() {
-            const container = document.getElementById('entries-container');
-            container.innerHTML = '';
-            entries.forEach(entry => {
-                const entryEl = document.createElement('article');
-                entryEl.className = 'diary-entry';
-                entryEl.dataset.id = entry.id;
-                entryEl.innerHTML = `
-                    <div class="entry-header">
-                        <span class="entry-date">${entry.date}</span>
-                        <div class="entry-actions">
-                            <button class="action-btn" onclick="editEntry(${entry.id})">편집</button>
-                            <button class="action-btn" onclick="deleteEntry(${entry.id})">삭제</button>
-                        </div>
-                    </div>
-                    <h3 class="entry-title">${entry.title}</h3>
-                    <div class="entry-content">${entry.content}</div>
-                    <div class="scrapbook-items">
-                        ${entry.photos.map(photo => `<img src="${photo}" class="scrapbook-item-image">`).join('')}
-                    </div>
-                `;
-                container.appendChild(entryEl);
-            });
-        }
+type TextItem = ItemBase & {
+  type: "text";
+  text: string;
+  color: string;
+  fontFamily: string;
+  fontSize: number; // px
+  shadow: boolean;
+  stroke: boolean;
+  italic: boolean;
+  vertical: boolean;
+};
 
-        function openModal(mode, id = null) {
-            const modal = document.getElementById('modal');
-            const form = document.getElementById('createForm');
-            const titleEl = document.querySelector('.modal-title');
-            
-            form.reset();
-            currentPhotos = [];
-            document.getElementById('photoPreview').innerHTML = '';
-            currentEditId = id;
+type StickerItem = ItemBase & { type: "sticker"; emoji: string; size: number };
 
-            if (mode === 'create') {
-                titleEl.textContent = '새로운 스크랩 만들기';
-            } else if (mode === 'edit') {
-                titleEl.textContent = '스크랩 편집하기';
-                const entry = entries.find(e => e.id === id);
-                if (entry) {
-                    document.getElementById('contentTitle').value = entry.title;
-                    document.getElementById('contentBody').value = entry.content;
-                    currentPhotos = [...entry.photos];
-                    updatePhotoPreview();
-                }
-            }
-            modal.style.display = 'block';
-        }
+type DrawingItem = ItemBase & { type: "drawing"; path: Array<{ x: number; y: number }>; stroke: string; width: number };
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-        
-        function handlePhotoUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentPhotos.push(e.target.result);
-                    updatePhotoPreview();
-                };
-                reader.readAsDataURL(file);
-            });
-        }
+type AnyItem = ImageItem | TextItem | StickerItem | DrawingItem;
 
-        function updatePhotoPreview() {
-            const preview = document.getElementById('photoPreview');
-            preview.innerHTML = '';
-            currentPhotos.forEach(photo => {
-                const img = document.createElement('img');
-                img.src = photo;
-                preview.appendChild(img);
-            });
-        }
+function uid() { return Math.random().toString(36).slice(2, 9); }
 
-        function saveContent() {
-            const title = document.getElementById('contentTitle').value;
-            const content = document.getElementById('contentBody').value;
-            
-            if (!title.trim() || !content.trim()) {
-                alert('제목과 내용을 입력해주세요.');
-                return;
-            }
-            
-            const newEntry = {
-                id: nextId++,
-                title, content,
-                date: new Date().toLocaleDateString('ko-KR'),
-                photos: currentPhotos
-            };
-            
-            if (currentEditId) {
-                const entryIndex = entries.findIndex(e => e.id === currentEditId);
-                if (entryIndex !== -1) {
-                    entries[entryIndex] = { ...newEntry, id: currentEditId };
-                }
-            } else {
-                entries.unshift(newEntry);
-            }
-            
-            renderEntries();
-            closeModal();
-        }
+// ──────────────────────────────────────────────────────────────────────────────
+// Scrapbook Editor
+// ──────────────────────────────────────────────────────────────────────────────
 
-        function editEntry(id) {
-            openModal('edit', id);
-        }
+function ScrapbookEditor({ onClose }: { onClose: ()=>void }) {
+  const [items, setItems] = useState<AnyItem[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [tool, setTool] = useState<"move" | "text" | "image" | "sticker" | "pen">("move");
+  const [bgColor, setBgColor] = useState<string>("#f9f3ea");
+  const [bgImage, setBgImage] = useState<string>("");
+  const [pageMargin, setPageMargin] = useState(20);
 
-        function deleteEntry(id) {
-            if (confirm('정말로 이 스크랩을 삭제하시겠어요?')) {
-                entries = entries.filter(e => e.id !== id);
-                renderEntries();
-            }
-        }
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            document.querySelector('.photo-upload-area').addEventListener(eventName, preventDefaults, false);
-        });
+  // drag state
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState<{dx:number, dy:number}>({dx:0, dy:0});
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+  const boardRef = React.useRef<HTMLDivElement>(null);
+  const [penColor, setPenColor] = useState("#131313");
+  const [penWidth, setPenWidth] = useState(4);
+  const [isDrawing, setIsDrawing] = useState(false);
 
-        document.querySelector('.photo-upload-area').addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            document.getElementById('photoInput').files = dt.files;
-            handlePhotoUpload({ target: document.getElementById('photoInput') });
-        });
-    </script>
-</body>
-</html>
+  // Draw as a vector polyline item
+  function startPen(e: React.MouseEvent) {
+    if (tool !== "pen") return;
+    const rect = (boardRef.current as HTMLDivElement).getBoundingClientRect();
+    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+    setIsDrawing(true);
+    const id = uid();
+    const d: DrawingItem = { id, type: "drawing", x:0, y:0, scale:1, rotate:0, z: items.length+1, path: [{x, y}], stroke: penColor, width: penWidth };
+    setItems((prev) => [...prev, d]);
+    setSelected(id);
+  }
+  function movePen(e: React.MouseEvent) {
+    if (!isDrawing) return;
+    const rect = (boardRef.current as HTMLDivElement).getBoundingClientRect();
+    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+    setItems((prev) => prev.map((it) => it.id === selected && it.type === "drawing"
+      ? { ...it, path: [...(it as DrawingItem).path, {x, y}] } as DrawingItem
+      : it));
+  }
+  function endPen(){ setIsDrawing(false); }
+
+  // mouse down on item for dragging
+  function onItemMouseDown(e: React.MouseEvent, id: string) {
+    if (tool === "pen") return; // ignore drag while drawing
+    e.stopPropagation();
+    setSelected(id);
+    setTool("move");
+    const board = boardRef.current!;
+    const rect = board.getBoundingClientRect();
+    const item = items.find(i => i.id === id)!;
+    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+    setDragId(id);
+    setDragOffset({ dx: x - item.x, dy: y - item.y });
+  }
+
+  function onBoardMouseMove(e: React.MouseEvent) {
+    if (dragId) {
+      const rect = boardRef.current!.getBoundingClientRect();
+      const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+      setItems((prev) => prev.map((it) => it.id === dragId ? { ...it, x: x - dragOffset.dx, y: y - dragOffset.dy } : it));
+    } else if (isDrawing) {
+      movePen(e);
+    }
+  }
+  function onBoardMouseUp(){ setDragId(null); endPen(); }
+
+  // add items
+  function addText(preset?: Partial<TextItem>) {
+    const id = uid();
+    const t: TextItem = {
+      id, type: "text", x: 160, y: 140, scale: 1, rotate: 0, z: items.length+1,
+      text: preset?.text || "i love september because i love u",
+      color: preset?.color || "#1a1a1a",
+      fontFamily: preset?.fontFamily || "'Caveat', 'Nanum Pen Script', cursive",
+      fontSize: preset?.fontSize || 40,
+      shadow: false,
+      stroke: true,
+      italic: false,
+      vertical: false,
+    };
+    setItems((p) => [...p, t]); setSelected(id); setTool("move");
+  }
+  function addSticker(emoji: string) {
+    const id = uid();
+    const s: StickerItem = { id, type: "sticker", x: 200, y: 180, scale: 1, rotate: 0, z: items.length+1, emoji, size: 48 };
+    setItems((p) => [...p, s]); setSelected(id); setTool("move");
+  }
+  function onImagePick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]; if (!file) return;
+    const url = URL.createObjectURL(file);
+    const id = uid();
+    const img: ImageItem = {
+      id, type: "image", src: url, x: 140, y: 160, scale: 1, rotate: -2 + Math.random()*4, z: items.length+1,
+      filter: { contrast:110, saturate:105, sepia:18, blur:0, brightness:98, grain:true },
+      frame: "polaroid",
+      caption: "from Joo :)",
+    };
+    setItems((p)=>[...p, img]); setSelected(id); setTool("move");
+    e.target.value = "";
+  }
+  function onBgPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]; if(!f) return; setBgImage(URL.createObjectURL(f)); e.target.value = "";
+  }
+
+  function bringForward(){ if(!selected) return; setItems((p)=> p.map(it=> it.id===selected?{...it, z: it.z+1}:it)); }
+  function sendBackward(){ if(!selected) return; setItems((p)=> p.map(it=> it.id===selected?{...it, z: Math.max(0,it.z-1)}:it)); }
+  function deleteSel(){ if(!selected) return; setItems((p)=> p.filter(it=> it.id!==selected)); setSelected(null); }
+
+  function updateSelected<T extends Partial<AnyItem>>(patch: T){ if(!selected) return; setItems((p)=> p.map(it=> it.id===selected?{...it, ...patch} as AnyItem: it)); }
+
+  // local save/load + export
+  function saveToLocal(){ localStorage.setItem("vintage-scrapbook", JSON.stringify({items, bgColor, bgImage, pageMargin})); }
+  function loadFromLocal(){ const raw = localStorage.getItem("vintage-scrapbook"); if(!raw) return; const d = JSON.parse(raw); setItems(d.items||[]); setBgColor(d.bgColor||"#f9f3ea"); setBgImage(d.bgImage||""); setPageMargin(d.pageMargin ?? 20); }
+  function clearBoard(){ setItems([]); setSelected(null); }
+
+  async function exportPNG(){
+    // lazy import to avoid bundler warnings when not installed
+    // @ts-ignore
+    const html2canvas = (await import('html2canvas')).default;
+    const node = boardRef.current!;
+    const canvas = await html2canvas(node, { backgroundColor: null, scale: 2 });
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a'); a.href = url; a.download = `scrap-${Date.now()}.png`; a.click();
+  }
+
+  // Simple "AI-ish" auto layout templates (rule-based). Later swap with server AI.
+  function autoLayout(style: 'polaroid-4'|'magazine'|'handwriting-overlay'){
+    const imgs = items.filter(i=> i.type==='image') as ImageItem[];
+    const texts = items.filter(i=> i.type==='text') as TextItem[];
+    const W = (boardRef.current?.clientWidth||1000) - pageMargin*2;
+    const H = (boardRef.current?.clientHeight||700) - pageMargin*2;
+
+    if(style==='polaroid-4'){
+      imgs.slice(0,4).forEach((im,idx)=>{
+        const r = Math.floor(idx/2); const c = idx%2; const cw=W/2-20, ch=H/2-20;
+        im.x = pageMargin + c*(cw+40) + cw/2 + 20; im.y = pageMargin + r*(ch+40) + ch/2 + 20;
+        im.scale = 1; im.rotate = [-5,-2,2,4][idx%4]; im.frame='polaroid'; im.filter.grain=true;
+      });
+      texts[0] && (texts[0].x = pageMargin+W-80, texts[0].y = pageMargin+H-30, texts[0].fontSize=28);
+      setItems([...items]);
+    }
+
+    if(style==='magazine'){
+      imgs[0] && (imgs[0].x = pageMargin+W*0.33, imgs[0].y = pageMargin+H*0.35, imgs[0].scale=1.2, imgs[0].frame='magazine', imgs[0].rotate=0);
+      imgs[1] && (imgs[1].x = pageMargin+W*0.75, imgs[1].y = pageMargin+H*0.75, imgs[1].scale=0.9, imgs[1].rotate=0);
+      texts[0] && (texts[0].x=pageMargin+W*0.8, texts[0].y=pageMargin+80, texts[0].fontSize=56, texts[0].fontFamily="'Shadows Into Light', cursive");
+      texts[1] && (texts[1].x=pageMargin+W*0.1, texts[1].y=pageMargin+H*0.8, texts[1].fontSize=22, texts[1].italic=true);
+      setItems([...items]);
+    }
+
+    if(style==='handwriting-overlay'){
+      imgs[0] && (imgs[0].x = pageMargin+W/2, imgs[0].y = pageMargin+H/2, imgs[0].scale=1.1, imgs[0].rotate=0, imgs[0].frame='none');
+      const t = texts[0] || addText({ text: 'i love SEPTEMBER because i love u', fontSize: 64, fontFamily: "'Caveat', cursive", color:'#ffffff' });
+      if(typeof t !== 'object') return; // addText returns void; ignore
+      const tx = items.find(i=> i.type==='text') as TextItem | undefined;
+      if(tx){ tx.x = pageMargin+W/2; tx.y = pageMargin+H*0.6; tx.stroke=true; tx.color='#ffffff'; tx.shadow=false; }
+      setItems([...items]);
+    }
+  }
+
+  const sel = items.find(i=> i.id===selected) || null;
+
+  return (
+    <div className="absolute inset-0 grid grid-cols-12 backdrop-blur-sm">
+      {/* Toolbar */}
+      <div className="col-span-2 md:col-span-2 bg-neutral-900/70 border-r border-white/10 p-3 text-white flex flex-col gap-3">
+        <div className="font-medium text-sm">Tools</div>
+        <button onClick={()=>setTool("move")} className={`rounded-lg py-2 text-sm ${tool==='move'? 'bg-white/15':'bg-white/5 hover:bg-white/10'}`}>Move</button>
+        <button onClick={()=>addText()} className="rounded-lg py-2 text-sm bg-white/5 hover:bg-white/10">Text</button>
+        <label className="w-full">
+          <input type="file" accept="image/*" onChange={onImagePick} className="hidden" />
+          <div className="rounded-lg py-2 text-sm text-center bg-white/5 hover:bg-white/10 cursor-pointer">Add Photo</div>
+        </label>
+        <button onClick={()=>setTool("pen")} className={`rounded-lg py-2 text-sm ${tool==='pen'? 'bg-white/15':'bg-white/5 hover:bg-white/10'}`}>✏️ Pen</button>
+
+        <div className="h-px bg-white/10 my-1" />
+        <div className="text-[10px] opacity-80 mb-1">Stickers</div>
+        <div className="grid grid-cols-3 gap-1 text-lg">
+          {['🌼','🍊','🌿','🌈','⭐','🫧','🐘','🌞','✿','🎀','📷','💌'].map(e=> (
+            <button key={e} onClick={()=>addSticker(e)} className="bg-white/5 hover:bg-white/10 rounded-md leading-none p-1">{e}</button>
+          ))}
+        </div>
+
+        <div className="mt-2 font-medium text-sm">Auto Layout</div>
+        <button onClick={()=>autoLayout('polaroid-4')} className="rounded-lg py-2 text-xs bg-white/5 hover:bg-white/10">Polaroid 2x2</button>
+        <button onClick={()=>autoLayout('magazine')} className="rounded-lg py-2 text-xs bg-white/5 hover:bg-white/10">Magazine</button>
+        <button onClick={()=>autoLayout('handwriting-overlay')} className="rounded-lg py-2 text-xs bg-white/5 hover:bg-white/10">Photo + Handwriting</button>
+
+        <div className="mt-auto space-y-2">
+          <button onClick={saveToLocal} className="w-full rounded-lg bg-white/10 hover:bg-white/20 py-2 text-xs">Save</button>
+          <button onClick={loadFromLocal} className="w-full rounded-lg bg-white/10 hover:bg-white/20 py-2 text-xs">Load</button>
+          <button onClick={exportPNG} className="w-full rounded-lg bg-white/10 hover:bg-white/20 py-2 text-xs">Export PNG</button>
+          <button onClick={clearBoard} className="w-full rounded-lg bg-rose-500/80 hover:bg-rose-500 py-2 text-xs">Clear</button>
+          <button onClick={onClose} className="w-full rounded-lg bg-white/10 hover:bg-white/20 py-2 text-xs">Close</button>
+        </div>
+      </div>
+
+      {/* Board */}
+      <div className="col-span-7 md:col-span-8 relative">
+        <div
+          ref={boardRef}
+          className="absolute inset-0 m-4 rounded-3xl border border-black/10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat"
+          style={{ padding: pageMargin, backgroundColor: bgColor, backgroundImage: `${bgImage?`url(${bgImage})`:''}, backgroundSize: 'cover', backgroundPosition:'center' }}
+          onMouseDown={(e)=>{ if(tool==='pen') startPen(e as any); else { setSelected(null); } }}
+          onMouseMove={onBoardMouseMove}
+          onMouseUp={onBoardMouseUp}
+        >
+          {/* film-edge vignette */}
+          <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_120px_rgba(0,0,0,0.35)]" />
+
+          {/* items */}
+          {items.sort((a,b)=> a.z-b.z).map((it)=> (
+            <div
+              key={it.id}
+              onMouseDown={(e)=>onItemMouseDown(e, it.id)}
+              className={`absolute select-none ${selected===it.id? 'outline outline-2 outline-rose-400/70':''}`}
+              style={{ left: it.x, top: it.y, transform: `translate(-50%,-50%) rotate(${it.rotate}deg) scale(${it.scale})`, zIndex: it.z }}
+            >
+              {it.type === 'image' && (
+                <PhotoFrame item={it as ImageItem} />
+              )}
+              {it.type === 'text' && (
+                <TextBox item={it as TextItem} onEdit={(txt)=>updateSelected({ text: txt } as any)} />
+              )}
+              {it.type === 'sticker' && (
+                <div className="px-2 py-1" style={{ fontSize: (it as StickerItem).size }}>{(it as StickerItem).emoji}</div>
+              )}
+              {it.type === 'drawing' && (
+                <svg className="overflow-visible" style={{filter:'drop-shadow(0 0 0 rgba(0,0,0,0))'}}> 
+                  <polyline fill="none" stroke={(it as DrawingItem).stroke} strokeWidth={(it as DrawingItem).width} strokeLinejoin="round" strokeLinecap="round" points={(it as DrawingItem).path.map(p=>`${p.x},${p.y}`).join(' ')} />
+                </svg>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Right panel */}
+      <div className="col-span-3 md:col-span-2 bg-neutral-900/70 border-l border-white/10 p-4 text-white space-y-4 overflow-auto">
+        <div>
+          <div className="text-sm font-medium mb-2">Background</div>
+          <div className="flex items-center gap-2">
+            <input type="color" value={bgColor} onChange={(e)=>setBgColor(e.target.value)} />
+            <label className="text-xs bg-white/10 hover:bg-white/15 rounded px-2 py-1 cursor-pointer">
+              <input className="hidden" type="file" accept="image/*" onChange={onBgPick} />
+              Image…
+            </label>
+            {bgImage && <button className="text-xs bg-white/10 rounded px-2 py-1" onClick={()=>setBgImage("")}>Clear</button>}
+          </div>
+          <label className="flex items-center gap-2 text-xs mt-2">
+            Margin <input type="range" min={0} max={60} value={pageMargin} onChange={(e)=>setPageMargin(parseInt(e.target.value))} />
+          </label>
+        </div>
+
+        <div>
+          <div className="text-sm font-medium mb-2">Pen</div>
+          <div className="flex items-center gap-3">
+            <input type="color" value={penColor} onChange={(e)=>setPenColor(e.target.value)} />
+            <input type="range" min={1} max={20} value={penWidth} onChange={(e)=>setPenWidth(parseInt(e.target.value))} />
+            <span className="text-xs opacity-80">{penWidth}px</span>
+          </div>
+        </div>
+
+        {sel && sel.type==='text' && (
+          <TextInspector sel={sel as TextItem} update={(p)=>updateSelected(p as any)} />
+        )}
+        {sel && sel.type==='image' && (
+          <ImageInspector sel={sel as ImageItem} update={(p)=>updateSelected(p as any)} />
+        )}
+        {sel && sel.type!=='image' && sel.type!=='text' && (
+          <div className="text-xs opacity-80">선택된 아이템: {sel.type}</div>
+        )}
+
+        <div className="flex gap-2">
+          <button onClick={bringForward} className="bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-xs">Bring ↑</button>
+          <button onClick={sendBackward} className="bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-xs">Send ↓</button>
+          <button onClick={deleteSel} className="bg-rose-500/80 hover:bg-rose-500 rounded px-2 py-1 text-xs">Delete</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Subcomponents
+// ──────────────────────────────────────────────────────────────────────────────
+
+function TextBox({ item, onEdit }: { item: TextItem; onEdit: (text:string)=>void }){
+  const style: React.CSSProperties = {
+    color: item.color,
+    fontFamily: item.fontFamily,
+    fontSize: item.fontSize,
+    fontStyle: item.italic? 'italic':'normal',
+    writingMode: item.vertical? ('vertical-rl' as any): ('horizontal-tb' as any),
+    WebkitTextStroke: item.stroke? '1px rgba(0,0,0,0.2)':'0',
+    textShadow: item.shadow? '0 1px 0 rgba(0,0,0,0.25)':'none'
+  };
+  return (
+    <div
+      suppressContentEditableWarning
+      contentEditable
+      onInput={(e)=> onEdit((e.currentTarget as HTMLDivElement).innerText)}
+      className="min-w-[80px] min-h-[32px] px-2 py-1 rounded-md"
+      style={style}
+    >{item.text}</div>
+  );
+}
+
+function PhotoFrame({ item }: { item: ImageItem }){
+  const f = item.filter;
+  const filterCss = `contrast(${f.contrast}%) saturate(${f.saturate}%) sepia(${f.sepia}%) blur(${f.blur}px) brightness(${f.brightness}%)`;
+  const img = (
+    <img src={item.src} className="max-w-[380px] max-h-[380px] object-cover" style={{ filter: filterCss }} />
+  );
+  return (
+    <div className="relative" style={{ filter: 'drop-shadow(0 12px 30px rgba(0,0,0,.35))' }}>
+      {item.frame === 'polaroid' && (
+        <div className="bg-white p-2 pt-2 rounded shadow-sm">
+          <div className="bg-neutral-200/30 rounded overflow-hidden">
+            {img}
+          </div>
+          <div className="pt-2 text-center" style={{fontFamily:"'Nanum Pen Script', 'Caveat', cursive"}}>
+            <span className="text-neutral-700 text-xl whitespace-pre">{item.caption||''}</span>
+          </div>
+        </div>
+      )}
+      {item.frame === 'magazine' && (
+        <div className="bg-white/80 ring-1 ring-black/10 overflow-hidden">
+          {img}
+          <div className="absolute top-3 left-4 text-black/80 tracking-[0.2em] uppercase text-3xl font-black">SWITCH</div>
+        </div>
+      )}
+      {item.frame === 'none' && (
+        <div className="rounded-xl overflow-hidden border border-white/10">
+          {img}
+        </div>
+      )}
+      {f.grain && <div className="pointer-events-none absolute inset-0 mix-blend-soft-light opacity-40" style={{backgroundImage:"url('https://grainy-gradients.vercel.app/noise.svg')"}}/>}
+      {/* corner tape vibe */}
+      <div className="pointer-events-none absolute -top-2 -left-2 rotate-[-6deg] h-6 w-10 bg-amber-200/80" />
+      <div className="pointer-events-none absolute -bottom-2 -right-2 rotate-[8deg] h-6 w-10 bg-amber-200/80" />
+    </div>
+  );
+}
+
+function TextInspector({ sel, update }: { sel: TextItem; update: (p: Partial<TextItem>)=>void }){
+  return (
+    <div className="space-y-2">
+      <div className="text-sm font-medium">Text</div>
+      <div className="flex items-center gap-2">
+        <input type="color" value={sel.color} onChange={(e)=>update({color: e.target.value})} />
+        <input type="range" min={12} max={96} value={sel.fontSize} onChange={(e)=>update({fontSize: parseInt(e.target.value)})} />
+        <span className="text-xs opacity-80">{sel.fontSize}px</span>
+      </div>
+      <select className="w-full bg-white/10 rounded px-2 py-1" value={sel.fontFamily} onChange={(e)=>update({fontFamily: e.target.value})}>
+        <option value="'Caveat', 'Nanum Pen Script', cursive">Caveat</option>
+        <option value="'Nanum Pen Script', cursive">Nanum Pen Script</option>
+        <option value="'Gochi Hand', cursive">Gochi Hand</option>
+        <option value="'Shadows Into Light', cursive">Shadows Into Light</option>
+      </select>
+      <div className="flex flex-wrap gap-2 text-xs">
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={sel.shadow} onChange={(e)=>update({shadow: e.target.checked})}/> shadow</label>
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={sel.stroke} onChange={(e)=>update({stroke: e.target.checked})}/> stroke</label>
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={sel.italic} onChange={(e)=>update({italic: e.target.checked})}/> italic</label>
+        <label className="inline-flex items-center gap-1"><input type="checkbox" checked={sel.vertical} onChange={(e)=>update({vertical: e.target.checked})}/> vertical</label>
+      </div>
+    </div>
+  );
+}
+
+function ImageInspector({ sel, update }: { sel: ImageItem; update: (p: Partial<ImageItem>)=>void }){
+  const f = sel.filter;
+  return (
+    <div className="space-y-2">
+      <div className="text-sm font-medium">Photo</div>
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <label className="flex items-center justify-between gap-2">Contrast <input type="range" min={50} max={160} value={f.contrast} onChange={(e)=>update({filter:{...f, contrast: parseInt(e.target.value)}})} /></label>
+        <label className="flex items-center justify-between gap-2">Saturate <input type="range" min={50} max={200} value={f.saturate} onChange={(e)=>update({filter:{...f, saturate: parseInt(e.target.value)}})} /></label>
+        <label className="flex items-center justify-between gap-2">Sepia <input type="range" min={0} max={100} value={f.sepia} onChange={(e)=>update({filter:{...f, sepia: parseInt(e.target.value)}})} /></label>
+        <label className="flex items-center justify-between gap-2">Blur <input type="range" min={0} max={6} value={f.blur} onChange={(e)=>update({filter:{...f, blur: parseInt(e.target.value)}})} /></label>
+        <label className="flex items-center justify-between gap-2">Bright <input type="range" min={70} max={120} value={f.brightness} onChange={(e)=>update({filter:{...f, brightness: parseInt(e.target.value)}})} /></label>
+      </div>
+      <label className="inline-flex items-center gap-2 text-xs"><input type="checkbox" checked={f.grain} onChange={(e)=>update({filter:{...f, grain: e.target.checked}})} /> film grain</label>
+      <div className="flex items-center gap-2 text-xs">
+        <span>Frame</span>
+        <select className="bg-white/10 rounded px-2 py-1" value={sel.frame} onChange={(e)=>update({frame: e.target.value as any})}>
+          <option value="polaroid">Polaroid</option>
+          <option value="magazine">Magazine</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+      {sel.frame!=='none' && (
+        <input className="w-full bg-white/10 rounded px-2 py-1 text-xs" placeholder="caption..." value={sel.caption||''} onChange={(e)=>update({caption: e.target.value})} />
+      )}
+    </div>
+  );
+}
+
+/*
+VINTAGE SCRAPBOOK — what’s included
+- 자유 배치 + 드래그/스케일/회전 + Z 순서
+- 사진: Polaroid/Magazine/None 프레임, 필름 필터(contrast/saturate/sepia/blur/brightness + grain), 캡션
+- 글: 손글씨 폰트(Caveat/Nanum Pen/Gochi/Shadow), stroke/vertical/italic/그림자
+- 펜 드로잉
+- 배경색/이미지, 페이지 여백, 저장/불러오기, PNG 내보내기(html2canvas 사용)
+- 오토 레이아웃(룰 기반): Polaroid 2x2, 매거진, 사진+핸드라이팅 — 서버 AI로 대체 가능
+
+다음 확장 아이디어
+- 업로드한 사진/문장 → 서버 AI가 템플릿/타이포/프레임 선택 후 파라미터 반환 → 위 상태(state)에 주입
+- 배경지(격자/도트/신문지) 프리셋, 한글/일문 세로조판 스타일 템플릿
+- 모바일 터치(핀치 회전/스케일), 그룹 선택/정렬 가이드, 멀티 선택
+*/
