@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joo suis mignonne</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&family=Caveat:wght@400;600&family=Kalam:wght@300;400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>My Scrapbook Diary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Jua&family=Dongle:wght@300;400;700&family=Hi+Melody&family=Gaegu&display=swap" rel="stylesheet">
     <style>
         /* 기본 스타일 */
         * {
@@ -14,26 +14,26 @@
         }
 
         body {
-            font-family: 'Patrick Hand', cursive;
+            font-family: 'Nanum Pen Script', cursive;
             line-height: 1.6;
-            color: #333;
-            background: #f8f8f8;
-            font-size: 16px;
+            color: #4a4a4a;
+            background-color: #fcf9f6; /* 종이 질감의 베이지색 */
+            font-size: 18px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 900px; /* 다이어리처럼 폭을 줄여줌 */
             margin: 0 auto;
-            padding: 0 30px;
+            padding: 0 20px;
         }
 
         /* Header */
         header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(252, 249, 246, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px dashed #e0d9d0;
             position: fixed;
             width: 100%;
             top: 0;
@@ -45,42 +45,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px 0;
         }
 
         .logo {
-            font-family: 'Amatic SC', cursive;
+            font-family: 'Jua', sans-serif;
             font-size: 28px;
             font-weight: 700;
-            color: #333;
+            color: #4a4a4a;
             text-decoration: none;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
         }
-
+        
         /* Hero Section */
         .hero {
-            height: 100vh;
+            height: 60vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                        url('https://images.unsplash.com/photo-1517409425442-f049007f300c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                        url('https://images.unsplash.com/photo-1541701490250-98319e34e16d?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1;
         }
 
         .hero-content {
@@ -90,232 +79,210 @@
         }
 
         .hero-title {
-            font-family: 'Roboto', sans-serif;
-            font-size: 4.8rem;
-            margin-bottom: 15px;
+            font-family: 'Dongle', sans-serif;
+            font-size: 5rem;
+            margin-bottom: 5px;
             color: white;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.3s forwards;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
         }
 
         .hero-subtitle {
-            font-family: 'Kalam', cursive;
-            font-size: 1.6rem;
+            font-family: 'Hi Melody', cursive;
+            font-size: 2.5rem;
             color: rgba(255,255,255,0.9);
-            margin-bottom: 40px;
-            font-weight: 400;
-            font-style: italic;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.6s forwards;
             text-shadow: 0 1px 5px rgba(0,0,0,0.3);
-        }
-
-        .hero-divider {
-            width: 60px;
-            height: 2px;
-            background: white;
-            margin: 0 auto;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.9s forwards;
+            margin-bottom: 20px;
         }
 
         /* Main Content */
         .main-content {
-            padding: 100px 0;
+            padding: 80px 0;
         }
 
-        /* Scrapbook Entry */
+        /* Diary Entry */
         .diary-entry {
-            margin-bottom: 80px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 60px;
+            background-color: #fffaf0; /* 노트 종이색 */
+            border: 1px solid #e0d9d0;
             border-radius: 10px;
-            overflow: hidden;
-            padding: 50px 40px;
-            min-height: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            position: relative;
+            transform: rotate(-0.5deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .diary-entry:nth-child(even) {
-            background: #fafafa;
+        
+        .diary-entry:nth-child(2n) {
+            transform: rotate(0.5deg);
         }
 
         .diary-entry:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Entry Actions */
-        .entry-actions {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 8px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-
-        .diary-entry:hover .entry-actions {
-            opacity: 1;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border: 2px solid rgba(255,255,255,0.8);
-            background: #555;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .action-btn:hover {
-            background: #222;
-            transform: scale(1.1);
-        }
-
-        .action-btn.edit {
-            background: #777;
-        }
-
-        .action-btn.edit:hover {
-            background: #555;
-        }
-
-        .action-btn.delete {
-            background: #999;
-        }
-
-        .action-btn.delete:hover {
-            background: #777;
+            transform: translateY(-5px) rotate(0deg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         /* Entry Header */
         .entry-header {
             display: flex;
-            justify-content: flex-start;
-            align-items: center;
+            justify-content: space-between;
+            align-items: flex-end;
             margin-bottom: 25px;
             padding-bottom: 15px;
+            border-bottom: 2px dashed #e0d9d0;
         }
 
         .entry-date {
-            font-family: 'Roboto', sans-serif;
-            font-size: 13px;
-            color: #777;
-            text-transform: uppercase;
+            font-family: 'Gaegu', cursive;
+            font-size: 1.2rem;
+            color: #999;
             letter-spacing: 0.5px;
-            font-weight: 400;
-            background: #eee;
-            padding: 8px 16px;
-            border-radius: 25px;
-            border: 1px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 스크랩북 편집/삭제 버튼 */
+        .entry-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background-color: #f2f2f2;
+            border: 1px solid #d9d9d9;
+            color: #555;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Gaegu', cursive;
+        }
+
+        .action-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .action-btn.delete {
+            background-color: #ffcccc;
+            border-color: #ff9999;
+            color: #e04c4c;
+        }
+
+        .action-btn.delete:hover {
+            background-color: #ff9999;
+            color: white;
         }
 
         .entry-title {
-            font-family: 'Amatic SC', cursive;
-            font-size: 3rem;
-            color: #222;
-            font-weight: 700;
-            margin-bottom: 30px;
-            line-height: 1.1;
-            letter-spacing: 0.5px;
+            font-family: 'Jua', sans-serif;
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
         }
 
         .entry-content {
-            font-family: 'Indie Flower', cursive;
-            color: #555;
-            line-height: 1.9;
-            font-size: 17px;
-            font-weight: 400;
-            letter-spacing: 0.3px;
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 1.5rem;
+            color: #4a4a4a;
+            line-height: 1.8;
             margin-bottom: 30px;
         }
-
-        /* Scrapbook Canvas */
+        
+        /* 스크랩북 캔버스 */
         .scrapbook-canvas {
             position: relative;
-            min-height: 300px;
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
+            min-height: 350px;
+            border: 2px dashed #e0d9d0;
             border-radius: 10px;
-            margin: 25px 0;
-            padding: 30px;
+            background-color: #fcf9f6;
+            padding: 20px;
+            overflow: hidden; /* 아이템이 캔버스 밖으로 나가지 않게 */
         }
-
+        
         .canvas-placeholder {
             text-align: center;
-            color: #aaa;
-            font-style: italic;
+            color: #b0a9a1;
+            font-family: 'Gaegu', cursive;
+            font-size: 1.5rem;
             margin-top: 100px;
-            font-family: 'Shadows Into Light', cursive;
-            font-size: 20px;
         }
 
-        /* Scrapbook Items */
+        /* 스크랩북 아이템 */
         .scrapbook-item {
             position: absolute;
             cursor: move;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            resize: both;
-            overflow: hidden;
-            min-width: 50px;
-            min-height: 50px;
+            border: 1px dashed transparent;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+            user-select: none;
             padding: 5px;
+            box-sizing: content-box;
+            transform-origin: 50% 50%;
         }
 
-        .scrapbook-item:hover {
-            border-color: #777;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        .scrapbook-item:hover, .scrapbook-item.active {
+            border-color: #9c27b0;
+            box-shadow: 0 0 5px rgba(156, 39, 176, 0.5);
         }
 
         .scrapbook-photo {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            border: 5px solid #fff;
-        }
-        
-        .scrapbook-sticker {
-            font-size: 50px;
-            padding: 10px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .scrapbook-text {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 20px;
-            border-radius: 15px;
-            font-family: 'Amatic SC', cursive;
-            font-size: 24px;
-            color: #333;
-            max-width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            resize: vertical;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            resize: none;
+            border: none;
             overflow: hidden;
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 1.5rem;
+            color: #4a4a4a;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .scrapbook-sticker {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
         }
 
-        /* Item Controls */
+        /* 크기 조절 핸들 */
+        .resize-handle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #9c27b0;
+            border: 1px solid white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+
+        .scrapbook-item:hover .resize-handle {
+            opacity: 1;
+        }
+
+        .resize-handle.bottom-right {
+            bottom: -5px;
+            right: -5px;
+            cursor: nwse-resize;
+        }
+
+        /* 컨트롤 버튼 */
         .item-controls {
             position: absolute;
             top: -15px;
@@ -332,7 +299,7 @@
         .control-btn {
             width: 28px;
             height: 28px;
-            background: #555;
+            background: #9c27b0;
             color: white;
             border: none;
             border-radius: 50%;
@@ -346,73 +313,14 @@
         }
 
         .control-btn.delete {
-            background: #999;
+            background: #ff5252;
         }
 
         .control-btn:hover {
             transform: scale(1.2);
         }
 
-        /* Review Entry Styles */
-        .review-category {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #777;
-            color: white;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            font-weight: 400;
-            border-radius: 25px;
-            margin-bottom: 20px;
-            font-family: 'Patrick Hand', cursive;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .review-rating {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .stars {
-            color: #ffc107;
-            font-size: 22px;
-        }
-
-        .rating-text {
-            color: #777;
-            font-family: 'Indie Flower', cursive;
-            font-size: 16px;
-        }
-
-        /* Create Button */
-        .create-btn {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            width: 64px;
-            height: 64px;
-            background: #333;
-            border: none;
-            color: white;
-            font-size: 28px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            border-radius: 50%;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            font-family: 'Amatic SC', cursive;
-        }
-
-        .create-btn:hover {
-            background: #222;
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        /* Modal */
+        /* 모달 */
         .modal {
             display: none;
             position: fixed;
@@ -422,301 +330,190 @@
             height: 100%;
             background: rgba(0,0,0,0.5);
             z-index: 2000;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
         }
 
         .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #f8f8f8;
-            padding: 45px;
-            width: 90%;
-            max-width: 750px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 3px solid #e0e0e0;
+            background: #fffaf0;
+            border: 2px solid #e0d9d0;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            position: relative;
         }
 
         .modal-header {
-            margin-bottom: 35px;
+            border-bottom: 2px dashed #e0d9d0;
             padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
         }
 
         .modal-title {
-            font-family: 'Amatic SC', cursive;
-            font-size: 2.5rem;
-            color: #333;
-            font-weight: 700;
-            letter-spacing: -0.2px;
+            font-family: 'Jua', sans-serif;
+            font-size: 2rem;
+            color: #4a4a4a;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
-            font-family: 'Roboto', sans-serif;
             display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: #555;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Gaegu', cursive;
+            font-size: 1.2rem;
+            color: #666;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 16px 18px;
-            border: 2px solid #ddd;
-            background: #fff;
-            font-size: 15px;
-            font-family: 'Indie Flower', cursive;
-            font-weight: 400;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            color: #333;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #555;
-            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
-        }
-
-        .form-group textarea {
-            height: 120px;
+            padding: 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 5px;
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 1.5rem;
+            color: #4a4a4a;
             resize: vertical;
         }
+        
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #9c27b0;
+            box-shadow: 0 0 5px rgba(156, 39, 176, 0.2);
+        }
 
-        /* Photo Upload */
         .photo-upload {
-            border: 3px dashed #ddd;
-            border-radius: 15px;
-            padding: 30px;
+            border: 2px dashed #e0d9d0;
+            border-radius: 10px;
+            padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fafafa;
-            font-family: 'Shadows Into Light', cursive;
-            color: #999;
-            font-size: 18px;
+            font-family: 'Gaegu', cursive;
+            color: #b0a9a1;
+            font-size: 1.2rem;
         }
-
-        .photo-upload:hover {
-            border-color: #555;
-            background: #f0f0f0;
-        }
-
-        .photo-upload input[type="file"] {
-            display: none;
-        }
-
+        
         .photo-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .photo-preview img {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 3px solid #eee;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .photo-preview img:hover {
-            transform: scale(1.1) rotate(3deg);
-        }
-
-        /* Scrapbook Tools */
-        .scrapbook-tools {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #fafafa;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-        }
-
-        .tool-btn {
-            padding: 10px 18px;
-            border: 1px solid #ccc;
-            background: #fff;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 400;
-            transition: all 0.3s ease;
-            font-family: 'Patrick Hand', cursive;
-            color: #555;
-        }
-
-        .tool-btn:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
-            border-color: #999;
-        }
-
-        .tool-btn.active {
-            background: #333;
-            color: white;
-            border-color: #333;
+            border-radius: 5px;
+            border: 1px solid #d9d9d9;
         }
 
         .form-actions {
             display: flex;
-            gap: 15px;
             justify-content: flex-end;
-            padding-top: 25px;
-            border-top: 2px solid #e0e0e0;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0d9d0;
         }
 
         .btn {
-            padding: 15px 30px;
-            border: 2px solid #ccc;
-            background: #fff;
+            padding: 12px 25px;
+            border: 1px solid #d9d9d9;
+            background-color: #f2f2f2;
             color: #555;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Jua', sans-serif;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-radius: 12px;
-            font-family: 'Patrick Hand', cursive;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
-            background: #333;
+            background-color: #9c27b0;
             color: white;
-            border-color: #333;
-        }
-
-        .btn:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
+            border-color: #9c27b0;
         }
 
         .btn-primary:hover {
-            background: #222;
-            border-color: #222;
+            background-color: #7b1fa2;
+        }
+        
+        .tool-btn {
+            padding: 8px 15px;
+            border: 1px solid #d9d9d9;
+            background-color: #f9f9f9;
+            font-family: 'Gaegu', cursive;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tool-btn:hover {
+            background-color: #f2f2f2;
         }
 
         /* Footer */
         footer {
-            background: #f8f8f8;
-            border-top: 2px solid #e0e0e0;
-            padding: 60px 0 40px;
+            background-color: #fcf9f6;
+            border-top: 1px dashed #e0d9d0;
+            padding: 40px 0;
             text-align: center;
-        }
-
-        .footer-content {
+            font-family: 'Gaegu', cursive;
+            font-size: 1rem;
             color: #999;
-            font-size: 14px;
-            line-height: 1.8;
-            font-weight: 400;
-            font-family: 'Shadows Into Light', cursive;
         }
 
-        .footer-links {
+        /* 글씨체 선택 */
+        .font-selector {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
         }
 
-        .footer-links a {
-            color: #999;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            font-family: 'Patrick Hand', cursive;
+        .font-btn {
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .footer-links a:hover {
-            color: #333;
+        .font-btn:hover {
+            background-color: #f2f2f2;
+        }
+
+        .font-btn.active {
+            background-color: #9c27b0;
+            color: white;
+            border-color: #9c27b0;
         }
 
         /* Notification */
         .notification {
             position: fixed;
-            top: 100px;
-            right: 40px;
-            background: #333;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4a4a4a;
             color: white;
-            padding: 18px 30px;
-            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 20px;
             z-index: 3000;
+            font-family: 'Gaegu', cursive;
             opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-            border-radius: 15px;
-            font-family: 'Patrick Hand', cursive;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s ease;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-            
-            .hero-title {
-                font-size: 3.5rem;
-            }
-            
-            .diary-entry {
-                margin-bottom: 60px;
-                padding: 30px 25px;
-            }
-
-            .entry-actions {
-                opacity: 1;
-                top: 10px;
-                right: 10px;
-            }
-
-            .scrapbook-tools {
-                flex-wrap: wrap;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 30px 25px;
-            }
-
-            .entry-title {
-                font-size: 2.5rem;
-            }
+        .notification.show {
+            opacity: 1;
         }
     </style>
 </head>
@@ -724,16 +521,15 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="#home" class="logo">Joo suis mignonne</a>
+                <a href="#home" class="logo">My Scrapbook Diary</a>
             </div>
         </div>
     </header>
 
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1 class="hero-title">Monochrome Diary</h1>
-            <p class="hero-subtitle">La vie ne fait que plaisanter</p>
-            <div class="hero-divider"></div>
+            <h1 class="hero-title">My Beautiful Memories</h1>
+            <p class="hero-subtitle">손으로 꾸민 듯, 나만의 감성 스크랩북</p>
         </div>
     </section>
 
@@ -742,191 +538,221 @@
             </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="mailto:hello@example.com">email</a>
-                <a href="#">instagram</a>
-                <a href="#">youtube</a>
-                <a href="#">newsletter</a>
-            </div>
-            <div class="footer-content">
-                © 2024 Joo suis mignonne. all rights reserved.<br>
-                주형이의 공간에서 일상의 소중한 순간들을 기록합니다.
-            </div>
-        </div>
-    </footer>
-
-    <button class="create-btn" onclick="openModal('create')">+</button>
+    <button class="create-btn">+</button>
 
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">새 스크랩북 만들기</h3>
+                <h3 class="modal-title">새로운 추억 만들기</h3>
             </div>
             
             <form id="createForm">
                 <div class="form-group">
-                    <label>type</label>
+                    <label>다이어리 종류</label>
                     <select id="contentType">
-                        <option value="diary">diary</option>
-                        <option value="review">review</option>
+                        <option value="diary">다이어리</option>
+                        <option value="review">리뷰</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label>title</label>
+                    <label>제목</label>
                     <input type="text" id="contentTitle" placeholder="제목을 입력하세요">
                 </div>
                 
                 <div class="form-group">
-                    <label>content</label>
+                    <label>내용</label>
                     <textarea id="contentBody" placeholder="내용을 입력하세요" rows="4"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>사진 추가</label>
-                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                        <input type="file" id="photoInput" multiple accept="image/*" onchange="handlePhotoUpload(event)">
-                        <div>📷 클릭하거나 사진을 드래그해서 추가하세요</div>
-                        <div class="photo-preview" id="photoPreview"></div>
+                    <div class="font-selector">
+                        <span class="font-btn active" data-font="Nanum Pen Script">글씨체1</span>
+                        <span class="font-btn" data-font="Jua">글씨체2</span>
+                        <span class="font-btn" data-font="Hi Melody">글씨체3</span>
+                        <span class="font-btn" data-font="Gaegu">글씨체4</span>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>스크랩북 꾸미기</label>
-                    <div class="scrapbook-tools">
-                        <button type="button" class="tool-btn" onclick="addSticker('🌟')">⭐ 별</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('💖')">💖 하트</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('🌸')">🌸 꽃</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('☀️')">☀️ 태양</button>
-                        <button type="button" class="tool-btn" onclick="addSticker('🦋')">🦋 나비</button>
-                        <button type="button" class="tool-btn" onclick="addTextBox()">📝 텍스트</button>
+                    <div class="tool-menu">
+                        <button type="button" class="tool-btn" onclick="addPhoto()">사진</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('💖')">💖</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('🌟')">🌟</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('🦋')">🦋</button>
+                        <button type="button" class="tool-btn" onclick="addText()">텍스트</button>
                     </div>
                     <div class="scrapbook-canvas" id="scrapbookCanvas">
-                        <div class="canvas-placeholder">여기에 사진과 스티커를 자유롭게 배치해보세요!</div>
+                        <div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>
                     </div>
+                    <input type="file" id="photoInput" multiple accept="image/*" style="display:none;">
                 </div>
             </form>
             
             <div class="form-actions">
-                <button type="button" class="btn" onclick="closeModal()">cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveContent()">save</button>
+                <button type="button" class="btn" onclick="closeModal()">취소</button>
+                <button type="button" class="btn btn-primary" onclick="saveContent()">저장</button>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>© 2025 My Scrapbook Diary. All Rights Reserved.</p>
+    </footer>
+
     <script>
         let entries = [
             {
-                id: 1,
-                type: 'diary',
-                title: 'lazy sunday afternoon ☕',
-                content: '좋은 책과 함께하는 여유로운 오후. 카페에서 마신 라떼 한 잔의 여유가 하루를 특별하게 만들어준다. 이런 작은 순간들이 모여서 인생이 되는 것 같아요.',
-                date: new Date().toLocaleDateString('ko-KR'),
-                scrapbookItems: [
-                    { type: 'sticker', content: '☕', x: 60, y: 30, width: 70, height: 70 },
-                    { type: 'sticker', content: '📚', x: 220, y: 90, width: 70, height: 70 },
-                    { type: 'text', content: 'good vibes only', x: 140, y: 160, width: 200, height: 50 }
+                id: 1, type: 'diary', title: '봄날의 소풍 🌸',
+                content: '따뜻한 햇살 아래 잔디밭에 앉아 좋아하는 책을 읽었다. 샌드위치와 커피를 마시며 바람을 느끼는 것만으로도 행복했던 하루.',
+                date: '2025.04.15', contentFont: 'Nanum Pen Script', scrapbookItems: [
+                    { type: 'photo', content: 'https://images.unsplash.com/photo-1517409425442-f049007f300c?q=80&w=150&h=150&fit=crop', x: 50, y: 30, width: 150, height: 150 },
+                    { type: 'sticker', content: '💖', x: 250, y: 120, width: 50, height: 50 },
+                    { type: 'text', content: '행복한 하루', x: 180, y: 200, width: 120, height: 50, font: 'Jua' }
                 ]
             },
             {
-                id: 2,
-                type: 'diary',
-                title: 'thinking about the future 🤔',
-                content: '요즘 미래에 대해 생각할 일이 많다. 내가 정말 원하는 것이 무엇인지, 어떤 사람이 되고 싶은지에 대해 깊게 고민하고 있어요. 답은 쉽게 나오지 않지만, 이런 고민 자체가 성장의 과정이라고 생각해요.',
-                date: new Date(Date.now() - 86400000).toLocaleDateString('ko-KR'),
-                scrapbookItems: [
-                    { type: 'sticker', content: '🤔', x: 80, y: 40, width: 70, height: 70 },
-                    { type: 'text', content: 'dreams come true', x: 160, y: 120, width: 200, height: 50 },
-                    { type: 'sticker', content: '🦋', x: 240, y: 70, width: 70, height: 70 }
-                ]
-            },
-            {
-                id: 3,
-                type: 'review',
-                title: '작은 것들의 신',
-                content: '아룬다티 로이의 섬세한 문체로 그려낸 인도의 풍경이 인상적이었어요. 가족의 비밀과 사회의 모순을 다룬 깊이 있는 소설. 읽는 내내 마음이 아프면서도 아름다운 문장들에 빠져들었습니다.',
-                date: new Date(Date.now() - 172800000).toLocaleDateString('ko-KR'),
-                scrapbookItems: [
-                    { type: 'sticker', content: '📚', x: 100, y: 50, width: 70, height: 70 },
-                    { type: 'sticker', content: '🌸', x: 200, y: 30, width: 70, height: 70 },
-                    { type: 'text', content: 'beautiful story', x: 130, y: 140, width: 200, height: 50 }
+                id: 2, type: 'review', title: '영화 "인사이드 아웃 2" 리뷰',
+                content: '기대했던 것보다 훨씬 더 깊이 있는 내용이었다. 감정들이 겪는 혼란과 성장을 보며 나 자신을 돌아볼 수 있었던 시간.',
+                date: '2025.06.21', contentFont: 'Nanum Pen Script', scrapbookItems: [
+                    { type: 'sticker', content: '🌟', x: 80, y: 150, width: 60, height: 60 },
+                    { type: 'photo', content: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=150&h=150&fit=crop', x: 280, y: 50, width: 160, height: 160 },
+                    { type: 'text', content: '감동적인 영화!', x: 180, y: 20, width: 150, height: 40, font: 'Hi Melody' }
                 ]
             }
         ];
 
+        let nextId = 3;
         let currentEditId = null;
-        let nextId = entries.length + 1;
         let currentScrapbookItems = [];
-        let uploadedPhotos = [];
 
-        document.addEventListener('DOMContentLoaded', renderEntries);
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEntries();
+            document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
+            document.querySelector('#photoInput').addEventListener('change', handlePhotoUpload);
+            setupFontSelectors();
+            setupItemCreationButtons();
+        });
 
-        function handlePhotoUpload(event) {
-            const files = Array.from(event.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedPhotos.push(e.target.result);
-                    updatePhotoPreview();
-                    addScrapbookItem({ type: 'photo', content: e.target.result });
-                };
-                reader.readAsDataURL(file);
+        // 다이어리 목록 렌더링
+        function renderEntries() {
+            const container = document.getElementById('entries-container');
+            container.innerHTML = '';
+            entries.forEach(entry => {
+                const entryHTML = createEntryHTML(entry);
+                container.insertAdjacentHTML('beforeend', entryHTML);
+                renderScrapbookItems(entry.id, entry.scrapbookItems);
             });
         }
-
-        function updatePhotoPreview() {
-            const preview = document.getElementById('photoPreview');
-            preview.innerHTML = '';
-            uploadedPhotos.forEach((photo, index) => {
-                const img = document.createElement('img');
-                img.src = photo;
-                img.onclick = () => addScrapbookItem({ type: 'photo', content: photo });
-                preview.appendChild(img);
-            });
+        
+        // 다이어리 HTML 생성
+        function createEntryHTML(entry) {
+            const isReview = entry.type === 'review';
+            return `
+                <article class="diary-entry" data-id="${entry.id}">
+                    <div class="entry-header">
+                        <div class="entry-meta">
+                            <span class="entry-date">${entry.date}</span>
+                        </div>
+                        <div class="entry-actions">
+                            <button class="action-btn edit" onclick="editEntry(${entry.id})">편집</button>
+                            <button class="action-btn delete" onclick="deleteEntry(${entry.id})">삭제</button>
+                        </div>
+                    </div>
+                    <h3 class="entry-title">${entry.title}</h3>
+                    ${isReview ? `<p class="entry-review-type">책 리뷰</p>` : ''}
+                    <div class="entry-content" style="font-family: '${entry.contentFont}';">${entry.content}</div>
+                    <div class="scrapbook-canvas" id="canvas-${entry.id}"></div>
+                </article>
+            `;
         }
-
-        function addSticker(emoji) {
-            addScrapbookItem({ type: 'sticker', content: emoji, width: 70, height: 70 });
-        }
-
-        function addTextBox() {
-            const text = prompt('텍스트를 입력하세요:');
-            if (text) {
-                addScrapbookItem({ type: 'text', content: text, width: 200, height: 50 });
-            }
-        }
-
-        function addScrapbookItem(item) {
-            const canvas = document.getElementById('scrapbookCanvas');
-            const rect = canvas.getBoundingClientRect();
-            const x = (Math.random() * (rect.width - 150)) + 15;
-            const y = (Math.random() * (rect.height - 150)) + 15;
-            currentScrapbookItems.push({ ...item, x, y });
-            renderScrapbookCanvas();
-        }
-
-        function renderScrapbookCanvas(items = currentScrapbookItems, containerId = 'scrapbookCanvas', isModal = true) {
-            const canvas = document.getElementById(containerId);
+        
+        // 스크랩북 아이템 렌더링
+        function renderScrapbookItems(entryId, items) {
+            const canvas = document.getElementById(`canvas-${entryId}`);
             if (!canvas) return;
 
             canvas.innerHTML = '';
-            const placeholder = document.createElement('div');
-            placeholder.className = 'canvas-placeholder';
-            placeholder.textContent = isModal ? '여기에 사진과 스티커를 자유롭게 배치해보세요!' : '스크랩북이 비어있습니다';
-
-            if (items.length === 0) {
-                canvas.appendChild(placeholder);
-            } else {
-                items.forEach((item, index) => {
+            if (items && items.length > 0) {
+                items.forEach(item => {
                     const itemEl = document.createElement('div');
                     itemEl.className = 'scrapbook-item';
                     itemEl.style.left = item.x + 'px';
                     itemEl.style.top = item.y + 'px';
-                    itemEl.style.width = item.width ? item.width + 'px' : '';
-                    itemEl.style.height = item.height ? item.height + 'px' : '';
-                    if (isModal) itemEl.style.position = 'absolute';
+                    itemEl.style.width = item.width + 'px';
+                    itemEl.style.height = item.height + 'px';
+                    
+                    if (item.type === 'photo') {
+                        const img = document.createElement('img');
+                        img.src = item.content;
+                        img.className = 'scrapbook-photo';
+                        itemEl.appendChild(img);
+                    } else if (item.type === 'sticker') {
+                        const sticker = document.createElement('div');
+                        sticker.textContent = item.content;
+                        sticker.className = 'scrapbook-sticker';
+                        itemEl.appendChild(sticker);
+                    } else if (item.type === 'text') {
+                        const text = document.createElement('div');
+                        text.textContent = item.content;
+                        text.className = 'scrapbook-text';
+                        text.style.fontFamily = `'${item.font}'`;
+                        itemEl.appendChild(text);
+                    }
+
+                    canvas.appendChild(itemEl);
+                });
+            } else {
+                canvas.innerHTML = '<div class="canvas-placeholder">스크랩북이 비어있습니다</div>';
+            }
+        }
+
+        // 모달 열기
+        function openModal(mode, id = null) {
+            const modal = document.getElementById('modal');
+            const titleEl = modal.querySelector('.modal-title');
+            const form = document.getElementById('createForm');
+            const canvas = document.getElementById('scrapbookCanvas');
+            
+            form.reset();
+            currentScrapbookItems = [];
+            currentEditId = id;
+            canvas.innerHTML = `<div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>`;
+            
+            if (mode === 'create') {
+                titleEl.textContent = '새로운 추억 만들기';
+            } else if (mode === 'edit') {
+                titleEl.textContent = '추억 편집하기';
+                const entry = entries.find(e => e.id === id);
+                if (entry) {
+                    document.getElementById('contentType').value = entry.type;
+                    document.getElementById('contentTitle').value = entry.title;
+                    document.getElementById('contentBody').value = entry.content;
+                    currentScrapbookItems = JSON.parse(JSON.stringify(entry.scrapbookItems || []));
+                    renderEditableItems();
+                }
+            }
+
+            modal.style.display = 'block';
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // 스크랩북 아이템 편집/이동/크기 조절
+        function renderEditableItems() {
+            const canvas = document.getElementById('scrapbookCanvas');
+            canvas.innerHTML = '';
+            
+            if (currentScrapbookItems.length > 0) {
+                currentScrapbookItems.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'scrapbook-item';
+                    itemEl.style.left = item.x + 'px';
+                    itemEl.style.top = item.y + 'px';
+                    itemEl.style.width = item.width + 'px';
+                    itemEl.style.height = item.height + 'px';
+                    itemEl.style.transform = `rotate(${item.rotate || 0}deg)`;
                     
                     let innerEl;
                     if (item.type === 'photo') {
@@ -934,353 +760,212 @@
                         innerEl.src = item.content;
                         innerEl.className = 'scrapbook-photo';
                     } else if (item.type === 'sticker') {
-                        innerEl = document.createElement('div');
+                        innerEl = document.createElement('span');
                         innerEl.textContent = item.content;
                         innerEl.className = 'scrapbook-sticker';
-                        innerEl.style.fontSize = item.width ? item.width * 0.7 + 'px' : '50px';
+                        innerEl.style.fontSize = `${item.width * 0.8}px`;
                     } else if (item.type === 'text') {
-                        innerEl = document.createElement('div');
-                        innerEl.textContent = item.content;
+                        innerEl = document.createElement('textarea');
+                        innerEl.value = item.content;
                         innerEl.className = 'scrapbook-text';
-                        innerEl.style.fontSize = item.width ? item.width * 0.12 + 'px' : '24px';
+                        innerEl.style.fontFamily = `'${item.font}'`;
+                        innerEl.style.fontSize = `${item.width * 0.1}px`;
+                        innerEl.addEventListener('input', (e) => {
+                            item.content = e.target.value;
+                        });
                     }
+                    
                     itemEl.appendChild(innerEl);
 
-                    if (isModal) {
-                        const controls = document.createElement('div');
-                        controls.className = 'item-controls';
-                        controls.innerHTML = `<button class="control-btn delete" onclick="removeScrapbookItem(${index})">×</button>`;
-                        itemEl.appendChild(controls);
-                        makeDraggableAndResizable(itemEl, index);
-                    }
-
-                    canvas.appendChild(itemEl);
-                });
-            }
-        }
-
-        function makeDraggableAndResizable(element, index) {
-            let isDragging = false;
-            let isResizing = false;
-            let startX, startY, initialX, initialY, initialWidth, initialHeight;
-            let item = currentScrapbookItems[index];
-
-            element.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('control-btn')) return;
-                
-                startX = e.clientX;
-                startY = e.clientY;
-                initialX = element.offsetLeft;
-                initialY = element.offsetTop;
-                initialWidth = element.offsetWidth;
-                initialHeight = element.offsetHeight;
-
-                if (e.target.classList.contains('scrapbook-text') || e.target.classList.contains('scrapbook-sticker')) {
-                    isResizing = true;
-                } else {
-                    isDragging = true;
-                }
-                element.style.zIndex = 1000;
-
-                document.addEventListener('mousemove', dragOrResize);
-                document.addEventListener('mouseup', stopDragOrResize);
-            });
-
-            function dragOrResize(e) {
-                e.preventDefault();
-                if (isDragging) {
-                    const dx = e.clientX - startX;
-                    const dy = e.clientY - startY;
-                    element.style.left = initialX + dx + 'px';
-                    element.style.top = initialY + dy + 'px';
+                    // 컨트롤 버튼 추가
+                    const controls = document.createElement('div');
+                    controls.className = 'item-controls';
+                    controls.innerHTML = `<button class="control-btn delete" onclick="deleteScrapbookItem(${index})">🗑️</button>`;
+                    itemEl.appendChild(controls);
                     
-                    item.x = initialX + dx;
-                    item.y = initialY + dy;
-                } else if (isResizing) {
-                    const dx = e.clientX - startX;
-                    const dy = e.clientY - startY;
-                    let newWidth = initialWidth + dx;
-                    let newHeight = initialHeight + dy;
-
-                    if (newWidth > 50 && newHeight > 50) {
-                        element.style.width = newWidth + 'px';
-                        element.style.height = newHeight + 'px';
-                        item.width = newWidth;
-                        item.height = newHeight;
-                        
-                        // 텍스트, 스티커 크기 재조정
-                        const innerEl = element.querySelector('.scrapbook-sticker, .scrapbook-text');
-                        if (innerEl) {
-                            if (innerEl.classList.contains('scrapbook-sticker')) {
-                                innerEl.style.fontSize = newWidth * 0.7 + 'px';
-                            } else if (innerEl.classList.contains('scrapbook-text')) {
-                                innerEl.style.fontSize = newWidth * 0.12 + 'px';
-                            }
-                        }
-                    }
-                }
+                    // 크기 조절 핸들 추가
+                    const handle = document.createElement('div');
+                    handle.className = 'resize-handle bottom-right';
+                    itemEl.appendChild(handle);
+                    
+                    canvas.appendChild(itemEl);
+                    setupDraggable(itemEl, index);
+                    setupResizable(itemEl, index);
+                });
+            } else {
+                canvas.innerHTML = `<div class="canvas-placeholder">사진, 스티커, 텍스트를 자유롭게 꾸며보세요!</div>`;
             }
-
-            function stopDragOrResize() {
-                isDragging = false;
-                isResizing = false;
-                element.style.zIndex = 'auto';
-                document.removeEventListener('mousemove', dragOrResize);
-                document.removeEventListener('mouseup', stopDragOrResize);
-            }
-        }
-
-        function removeScrapbookItem(index) {
-            currentScrapbookItems.splice(index, 1);
-            renderScrapbookCanvas();
-        }
-
-        function addNewEntry(type, title, content) {
-            const newEntry = {
-                id: nextId++,
-                type: type,
-                title: title,
-                content: content,
-                date: new Date().toLocaleDateString('ko-KR'),
-                scrapbookItems: [...currentScrapbookItems]
-            };
-            
-            entries.unshift(newEntry);
-            renderEntries();
-            showNotification('새 스크랩북이 추가되었습니다! 🎉');
-        }
-
-        function deleteEntry(id) {
-            if (confirm('정말로 이 글을 삭제하시겠습니까?')) {
-                entries = entries.filter(entry => entry.id !== id);
-                renderEntries();
-                showNotification('글이 삭제되었습니다.');
-            }
-        }
-
-        function editEntry(id) {
-            const entry = entries.find(e => e.id === id);
-            if (entry) {
-                currentEditId = id;
-                currentScrapbookItems = [...(entry.scrapbookItems || [])];
-                
-                document.getElementById('contentType').value = entry.type;
-                document.getElementById('contentTitle').value = entry.title;
-                document.getElementById('contentBody').value = entry.content;
-                
-                renderScrapbookCanvas();
-                
-                document.querySelector('.modal-title').textContent = '스크랩북 수정하기';
-                document.getElementById('modal').style.display = 'block';
-            }
-        }
-
-        function renderEntries() {
-            const container = document.getElementById('entries-container');
-            container.innerHTML = '';
-            
-            entries.forEach(entry => {
-                const entryHTML = createEntryHTML(entry);
-                container.insertAdjacentHTML('beforeend', entryHTML);
-                
-                const canvasId = `canvas-${entry.id}`;
-                const canvas = document.getElementById(canvasId);
-                if (canvas) {
-                    renderScrapbookCanvas(entry.scrapbookItems, canvasId, false);
-                }
-            });
-            
-            applyScrollAnimations();
         }
         
-        function createEntryHTML(entry) {
-            const isReview = entry.type === 'review';
-            const reviewCategory = isReview ? '<span class="review-category">book review</span>' : '';
-            const reviewRating = isReview ? `
-                <div class="review-rating">
-                    <span class="stars">⭐⭐⭐⭐⭐</span>
-                    <span class="rating-text">5/5</span>
-                </div>
-            ` : '';
+        // 아이템 드래그 기능
+        function setupDraggable(element, index) {
+            let startX, startY;
             
-            return `
-                <article class="diary-entry ${isReview ? 'review' : ''}" data-id="${entry.id}">
-                    <div class="entry-actions">
-                        <button class="action-btn edit" onclick="event.stopPropagation(); editEntry(${entry.id})" title="수정">✏️</button>
-                        <button class="action-btn delete" onclick="event.stopPropagation(); deleteEntry(${entry.id})" title="삭제">🗑️</button>
-                    </div>
-                    
-                    <div class="entry-header">
-                        <div class="entry-date">${entry.date}</div>
-                    </div>
-                    
-                    ${reviewCategory}
-                    <h3 class="entry-title">${entry.title}</h3>
-                    ${reviewRating}
-                    <div class="entry-content">${entry.content}</div>
-                    
-                    <div class="scrapbook-canvas" id="canvas-${entry.id}"></div>
-                </article>
-            `;
-        }
-
-        function showNotification(message) {
-            const existing = document.querySelector('.notification');
-            if (existing) existing.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '1';
-                notification.style.transform = 'translateY(0)';
-            }, 100);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        function applyScrollAnimations() {
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            document.querySelectorAll('.diary-entry').forEach((item, index) => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(50px)';
-                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            element.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('resize-handle') || e.target.classList.contains('control-btn')) return;
                 
-                setTimeout(() => {
-                    observer.observe(item);
-                }, index * 100);
+                let rect = element.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                
+                const onMouseMove = (e) => {
+                    let newX = e.clientX - startX;
+                    let newY = e.clientY - startY;
+                    
+                    element.style.left = `${newX}px`;
+                    element.style.top = `${newY}px`;
+                    
+                    currentScrapbookItems[index].x = newX;
+                    currentScrapbookItems[index].y = newY;
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
             });
         }
+        
+        // 아이템 크기 조절 기능
+        function setupResizable(element, index) {
+            const handle = element.querySelector('.resize-handle');
+            if (!handle) return;
+            
+            let startX, startY, startWidth, startHeight;
 
-        function openModal() {
-            currentEditId = null;
-            currentScrapbookItems = [];
-            uploadedPhotos = [];
-            document.getElementById('createForm').reset();
-            document.getElementById('photoPreview').innerHTML = '';
-            renderScrapbookCanvas();
-            document.querySelector('.modal-title').textContent = '새 스크랩북 만들기';
-            document.getElementById('modal').style.display = 'block';
+            handle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                startX = e.clientX;
+                startY = e.clientY;
+                startWidth = parseInt(document.defaultView.getComputedStyle(element).width, 10);
+                startHeight = parseInt(document.defaultView.getComputedStyle(element).height, 10);
+                
+                const onMouseMove = (e) => {
+                    const newWidth = startWidth + (e.clientX - startX);
+                    const newHeight = startHeight + (e.clientY - startY);
+                    
+                    if (newWidth > 50 && newHeight > 50) {
+                        element.style.width = `${newWidth}px`;
+                        element.style.height = `${newHeight}px`;
+                        currentScrapbookItems[index].width = newWidth;
+                        currentScrapbookItems[index].height = newHeight;
+                    }
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        }
+        
+        // 글씨체 선택 기능
+        function setupFontSelectors() {
+            const fontButtons = document.querySelectorAll('.font-btn');
+            fontButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    fontButtons.forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    const font = e.target.getAttribute('data-font');
+                    document.getElementById('contentBody').style.fontFamily = `'${font}'`;
+                });
+            });
+        }
+        
+        // 스크랩북 아이템 생성 버튼
+        function setupItemCreationButtons() {
+            document.querySelector('.create-btn').addEventListener('click', () => openModal('create'));
+            
+            document.querySelector('.tool-btn:nth-child(1)').addEventListener('click', () => document.getElementById('photoInput').click());
+            document.querySelector('.tool-btn:nth-child(2)').addEventListener('click', () => addScrapbookItem('sticker', '💖', 50, 50));
+            document.querySelector('.tool-btn:nth-child(3)').addEventListener('click', () => addScrapbookItem('sticker', '🌟', 50, 50));
+            document.querySelector('.tool-btn:nth-child(4)').addEventListener('click', () => addScrapbookItem('sticker', '🦋', 50, 50));
+            document.querySelector('.tool-btn:nth-child(5)').addEventListener('click', () => addScrapbookItem('text', '새로운 텍스트', 150, 40));
         }
 
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('createForm').reset();
-            currentEditId = null;
-            currentScrapbookItems = [];
-            uploadedPhotos = [];
-            document.getElementById('photoPreview').innerHTML = '';
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    addScrapbookItem('photo', e.target.result, 150, 150);
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
+        function addScrapbookItem(type, content, width, height) {
+            const canvas = document.getElementById('scrapbookCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const newItem = {
+                type, content, width, height,
+                x: Math.random() * (rect.width - width),
+                y: Math.random() * (rect.height - height),
+                font: 'Nanum Pen Script'
+            };
+            currentScrapbookItems.push(newItem);
+            renderEditableItems();
+        }
+
+        function deleteScrapbookItem(index) {
+            currentScrapbookItems.splice(index, 1);
+            renderEditableItems();
+        }
+        
         function saveContent() {
             const type = document.getElementById('contentType').value;
             const title = document.getElementById('contentTitle').value;
             const content = document.getElementById('contentBody').value;
+            const font = document.querySelector('.font-btn.active').getAttribute('data-font');
             
             if (!title.trim() || !content.trim()) {
                 alert('제목과 내용을 입력해주세요.');
                 return;
             }
             
-            if (currentEditId) {
-                const entryIndex = entries.findIndex(e => e.id === currentEditId);
-                if (entryIndex !== -1) {
-                    entries[entryIndex].type = type;
-                    entries[entryIndex].title = title;
-                    entries[entryIndex].content = content;
-                    entries[entryIndex].scrapbookItems = [...currentScrapbookItems];
-                    renderEntries();
-                    showNotification('스크랩북이 수정되었습니다! ✏️');
-                }
-            } else {
-                addNewEntry(type, title, content);
-            }
+            const newEntry = {
+                id: nextId++,
+                type, title, content,
+                date: new Date().toLocaleDateString('ko-KR'),
+                contentFont: font,
+                scrapbookItems: JSON.parse(JSON.stringify(currentScrapbookItems))
+            };
             
+            entries.unshift(newEntry);
+            renderEntries();
             closeModal();
+            showNotification('새로운 추억이 저장되었어요! ✨');
         }
 
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.backdropFilter = 'blur(10px)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.backdropFilter = 'blur(10px)';
-            }
-        });
+        function editEntry(id) {
+            openModal('edit', id);
+        }
 
-        window.addEventListener('click', function(e) {
-            const modal = document.getElementById('modal');
-            if (e.target === modal) {
-                closeModal();
+        function deleteEntry(id) {
+            if (confirm('정말로 이 추억을 삭제하시겠어요?')) {
+                entries = entries.filter(e => e.id !== id);
+                renderEntries();
+                showNotification('추억이 삭제되었어요.');
             }
-        });
-
-        const photoUploadElement = document.querySelector('.photo-upload');
+        }
         
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            photoUploadElement.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            photoUploadElement.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            photoUploadElement.addEventListener(eventName, unhighlight, false);
-        });
-
-        function highlight() {
-            photoUploadElement.style.borderColor = '#555';
-            photoUploadElement.style.background = '#f0f0f0';
-        }
-
-        function unhighlight() {
-            photoUploadElement.style.borderColor = '#ddd';
-            photoUploadElement.style.background = '#fafafa';
-        }
-
-        photoUploadElement.addEventListener('drop', handleDrop, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
+        function showNotification(message) {
+            const noti = document.createElement('div');
+            noti.className = 'notification';
+            noti.textContent = message;
+            document.body.appendChild(noti);
             
-            Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        uploadedPhotos.push(e.target.result);
-                        updatePhotoPreview();
-                        addScrapbookItem({ type: 'photo', content: e.target.result, width: 160, height: 160 });
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
+            setTimeout(() => noti.classList.add('show'), 10);
+            setTimeout(() => {
+                noti.classList.remove('show');
+                noti.addEventListener('transitionend', () => noti.remove());
+            }, 3000);
         }
     </script>
 </body>
