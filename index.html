@@ -1,288 +1,10 @@
-<script>
-        // 글 데이터 저장 (실제로는 데이터베이스를 사용)
-        let entries = [
-            { id: 1, type: 'diary', title: '오늘의 커피 한 잔', content: '좋은 책과 함께하는 여유로운 오후...', date: 'September 8, 2024' },
-            { id: 2, type: 'diary', title: '미래에 대한 생각', content: '요즘 미래에 대해 생각할 일이 많다...', date: 'September 7, 2024' },
-            { id: 3, type: 'review', title: '작은 것들의 신', content: '아룬다티 로이의 섬세한 문체...', date: 'September 6, 2024' },
-            { id: 4, type: 'diary', title: '산책길의 작은 발견', content: '길가에서 만난 예쁜 꽃들...', date: 'September 5, 2024' },
-            { id: 5, type: 'review', title: '기생충', content: '봉준호 감독의 탁월한 연출...', date: 'September 4, 2024' },
-            { id: 6, type: 'diary', title: '감사한 하루의 마무리', content: '오늘 하루도 무사히 마무리...', date: 'September 2, 2024' }
-        ];
-
-        let currentEditId = null;
-
-        // 새 글 추가
-        function addNewEntry(type, title, content) {
-            const newId = Math.max(...entries.map(e => e.id)) + 1;
-            const newEntry = {
-                id: newId,
-                type: type,
-                title: title,
-                content: content,
-                date: new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                })
-            };
-            
-            entries.unshift(newEntry); // 맨 앞에 추가
-            renderEntries(); // 화면 새로고침
-            
-            // 성공 메시지
-            showNotification('새 글이 추가되었습니다! 🎉');
-        }
-
-        // 글 삭제
-        function deleteEntry(id) {
-            if (confirm('정말로 이 글을 삭제하시겠습니까?')) {
-                entries = entries.filter(entry => entry.id !== id);
-                renderEntries();
-                showNotification('글이 삭제되었습니다.');
-            }
-        }
-
-        // 글 수정
-        function editEntry(id) {
-            const entry = entries.find(e => e.id === id);
-            if (entry) {
-                currentEditId = id;
-                document.getElementById('contentType').value = entry.type;
-                document.getElementById('contentTitle').value = entry.title;
-                document.getElementById('contentBody').value = entry.content;
-                
-                document.querySelector('.modal-title').textContent = '글 수정하기';
-                document.getElementById('modal').style.display = 'block';
-            }
-        }
-
-        // 글 목록 다시 그리기
-        function renderEntries() {
-            const container = document.querySelector('.main-content .container');
-            
-            // 기존 글들 제거
-            const existingEntries = container.querySelectorAll('.diary-entry');
-            existingEntries.forEach(entry => entry.remove());
-            
-            // 새로운 글들 추가
-            entries.forEach(entry => {
-                const entryHTML = createEntryHTML(entry);
-                container.insertAdjacentHTML('beforeend', entryHTML);
-            });
-            
-            // 애니메이션 다시 적용
-            applyScrollAnimations();
-        }
-
-        // 글 HTML 생성
-        function createEntryHTML(entry) {
-            const isReview = entry.type === 'review';
-            const reviewCategory = isReview ? '<span class="review-category">Book</span>' : '';
-            const reviewRating = isReview ? `
-                <div class="review-rating">
-                    <span class="stars">⭐⭐⭐⭐⭐</span>
-                    <span class="rating-text">5/5</span>
-                </div>
-            ` : '';
-            
-            return `
-                <article class="diary-entry ${isReview ? 'review' : ''}" data-id="${entry.id}" onclick="openModal('${entry.type}', ${entry.id})">
-                    <div class="entry-actions">
-                        <button class="action-btn edit" onclick="event.stopPropagation(); editEntry(${entry.id})" title="수정">✏️</button>
-                        <button class="action-btn delete" onclick="event.stopPropagation(); deleteEntry(${entry.id})" title="삭제">🗑️</button>
-                    </div>
-                    <div class="photo-side">
-                        <div class="photo-image">${getRandomEmoji()}</div>
-                    </div>
-                    <div class="text-side">
-                        <div class="entry-header">
-                            <div class="entry-date">${entry.date}</div>
-                        </div>
-                        ${reviewCategory}
-                        <h3 class="entry-title">${entry.title}</h3>
-                        ${reviewRating}
-                        <div class="entry-content">${entry.content}</div>
-                    </div>
-                </article>
-            `;
-        }
-
-        // 랜덤 이모지 생성
-        function getRandomEmoji() {
-            const emojis = ['📸', '🤔', '📚', '🌸', '🎬', '🌅', '☕', '💭', '🌻', '🎨', '📝', '🌙'];
-            return emojis[Math.floor(Math.random() * emojis.length)];
-        }
-
-        // 알림 표시
-        function showNotification(message) {
-            // 기존 알림 제거
-            const existing = document.querySelector('.notification');
-            if (existing) existing.remove();
-            
-            // 새 알림 생성
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 40px;
-                background: #1a1a1a;
-                color: white;
-                padding: 15px 25px;
-                border-radius: 8px;
-                font-size: 14px;
-                z-index: 3000;
-                opacity: 0;
-                transform: translateY(-20px);
-                transition: all 0.3s ease;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // 애니메이션
-            setTimeout(() => {
-                notification.style.opacity = '1';
-                notification.style.transform = 'translateY(0)';
-            }, 100);
-            
-            // 3초 후 제거
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateY(-20px)';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // 스크롤 애니메이션 적용
-        function applyScrollAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.diary-entry').forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(50px)';
-                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(item);
-            });
-        }
-
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Header background change on scroll
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(254, 254, 254, 0.98)';
-                header.style.backdropFilter = 'blur(15px)';
-            } else {
-                header.style.background = 'rgba(254, 254, 254, 0.95)';
-                header.style.backdropFilter = 'blur(20px)';
-            }
-        });
-
-        // Modal functions
-        function openModal(type, id = null) {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'block';
-            
-            // 수정 모드가 아닌 경우 폼 초기화
-            if (!currentEditId) {
-                document.getElementById('createForm').reset();
-                if (type !== 'create') {
-                    document.getElementById('contentType').value = type;
-                }
-                
-                // Update modal title based on type
-                const modalTitle = document.querySelector('.modal-title');
-                const titles = {
-                    'diary': '새 다이어리 쓰기',
-                    'review': '새 리뷰 작성',
-                    'create': '새 글쓰기'
-                };
-                modalTitle.textContent = titles[type] || '새 글쓰기';
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('createForm').reset();
-            currentEditId = null;
-            document.querySelector('.modal-title').textContent = '새 글쓰기';
-        }
-
-        function saveContent() {
-            const type = document.getElementById('contentType').value;
-            const title = document.getElementById('contentTitle').value;
-            const content = document.getElementById('contentBody').value;
-            
-            if (!title.trim() || !content.trim()) {
-                alert('제목과 내용을 입력해주세요.');
-                return;
-            }
-            
-            if (currentEditId) {
-                // 수정 모드
-                const entryIndex = entries.findIndex(e => e.id === currentEditId);
-                if (entryIndex !== -1) {
-                    entries[entryIndex].type = type;
-                    entries[entryIndex].title = title;
-                    entries[entryIndex].content = content;
-                    renderEntries();
-                    showNotification('글이 수정되었습니다! ✏️');
-                }
-            } else {
-                // 새 글 추가
-                addNewEntry(type, title, content);
-            }
-            
-            closeModal();
-        }
-
-        // Click outside modal to close
-        window.addEventListener('click', function(e) {
-            const modal = document.getElementById('modal');
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // 초기 스크롤 애니메이션 적용
-        document.addEventListener('DOMContentLoaded', function() {
-            applyScrollAnimations();
-        });
-    </script>
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joo suis mignonne</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&family=Caveat:wght@400;600&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -291,10 +13,10 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Patrick Hand', cursive;
             line-height: 1.6;
-            color: #1a1a1a;
-            background: #fefefe;
+            color: #5a4f45;
+            background: #faf9f7;
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -308,9 +30,9 @@
 
         /* Header */
         header {
-            background: rgba(254, 254, 254, 0.95);
+            background: rgba(250, 249, 247, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid #e8e8e8;
+            border-bottom: 1px solid #e8dcc0;
             position: fixed;
             width: 100%;
             top: 0;
@@ -326,11 +48,13 @@
         }
 
         .logo {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 600;
-            color: #1a1a1a;
+            color: #5a4f45;
             text-decoration: none;
             letter-spacing: -0.3px;
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-1deg);
         }
 
         /* Hero Section */
@@ -340,8 +64,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -366,18 +90,20 @@
         }
 
         .hero-title {
-            font-size: 3.2rem;
+            font-size: 4.2rem;
             margin-bottom: 15px;
             color: white;
-            font-weight: 300;
-            letter-spacing: -1.5px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             opacity: 0;
             animation: fadeInUp 1s ease 0.3s forwards;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-1deg);
         }
 
         .hero-subtitle {
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             color: rgba(255,255,255,0.9);
             margin-bottom: 40px;
             font-weight: 400;
@@ -385,6 +111,7 @@
             opacity: 0;
             animation: fadeInUp 1s ease 0.6s forwards;
             text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+            font-family: 'Shadows Into Light', cursive;
         }
 
         .hero-divider {
@@ -394,7 +121,6 @@
             margin: 0 auto;
             opacity: 0;
             animation: fadeInUp 1s ease 0.9s forwards;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
         }
 
         /* Main Content */
@@ -402,173 +128,306 @@
             padding: 100px 0;
         }
 
-        /* Diary Entry */
+        /* Scrapbook Entry */
         .diary-entry {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            margin-bottom: 100px;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            border: 1px solid #f0f0f0;
+            margin-bottom: 80px;
+            background: #faf9f7;
+            border: 1px solid #e0ddd7;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 3px 15px rgba(139, 130, 115, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            min-height: 600px;
+            padding: 50px 40px;
+            transform: rotate(0.5deg);
+            /* 노트 줄 - 더 자연스럽게 */
+            background-image:
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 26px,
+                    rgba(180, 170, 160, 0.12) 26px,
+                    rgba(180, 170, 160, 0.12) 27px
+                );
+            /* 종이 질감 */
+            background-color: #faf9f7;
+        }
+
+        .diary-entry.review {
+            background: #f1e9d8;
+            border: 1px solid #d4c4a8;
+            transform: rotate(-1.5deg);
+            box-shadow: 0 5px 20px rgba(139, 130, 115, 0.25);
+        }
+
+        .diary-entry:nth-child(even) {
+            transform: rotate(-0.3deg);
         }
 
         .diary-entry:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            transform: translateY(-5px) rotate(0deg);
+            box-shadow: 0 12px 35px rgba(139, 130, 115, 0.25);
         }
 
-        /* Photo Side */
-        .photo-side {
-            position: relative;
-            background: #f8f8f8;
+        /* Entry Actions */
+        .entry-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .diary-entry:hover .entry-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid rgba(255,255,255,0.8);
+            background: rgba(255, 107, 157, 0.9);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 800px;
-            overflow: hidden;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(255, 107, 157, 0.3);
         }
 
-        .photo-image {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: #999;
-            position: relative;
-            overflow: hidden;
+        .action-btn:hover {
+            background: rgba(255, 107, 157, 1);
+            transform: scale(1.1);
         }
 
-        /* Film Camera Effects */
-        .photo-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                135deg,
-                rgba(255,220,177,0.2) 0%,
-                transparent 20%,
-                transparent 80%,
-                rgba(139,69,19,0.1) 100%
-            );
-            pointer-events: none;
+        .action-btn.edit {
+            background: rgba(255, 193, 7, 0.9);
+            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
         }
 
-        .photo-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 2%),
-                radial-gradient(circle at 80% 80%, rgba(0,0,0,0.05) 0%, transparent 3%),
-                linear-gradient(0deg, rgba(0,0,0,0.02) 0%, transparent 100%);
-            pointer-events: none;
+        .action-btn.edit:hover {
+            background: rgba(255, 193, 7, 1);
         }
 
-        .diary-entry:hover .photo-image {
-            filter: sepia(20%) saturate(120%) contrast(110%) brightness(110%);
+        .action-btn.delete {
+            background: rgba(255, 71, 87, 0.9);
+            box-shadow: 0 3px 10px rgba(255, 71, 87, 0.3);
         }
 
-        /* Text Side */
-        .text-side {
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: white;
-            position: relative;
-            min-height: 800px;
+        .action-btn.delete:hover {
+            background: rgba(255, 71, 87, 1);
         }
 
-        .text-side::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: #f0f0f0;
-        }
-
+        /* Entry Header */
         .entry-header {
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #f5f5f5;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
         }
 
         .entry-date {
             font-size: 13px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            color: #8b7a6b;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+            font-family: 'Patrick Hand', cursive;
+            background: rgba(255, 248, 230, 0.8);
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e8dcc0;
+            transform: rotate(-1.5deg);
+            box-shadow: 0 2px 8px rgba(232, 220, 192, 0.3);
         }
 
         .entry-title {
-            font-size: 1.5rem;
-            color: #1a1a1a;
-            font-weight: 600;
-            margin-bottom: 20px;
-            letter-spacing: -0.3px;
+            font-size: 3rem;
+            color: #4a3f35;
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-family: 'Amatic SC', cursive;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            transform: rotate(-0.5deg);
         }
 
         .entry-content {
-            color: #444;
-            line-height: 1.8;
-            font-size: 15px;
+            color: #5a4f45;
+            line-height: 1.9;
+            font-size: 17px;
             font-weight: 400;
+            font-family: 'Indie Flower', cursive;
+            letter-spacing: 0.3px;
+            margin-bottom: 30px;
+            transform: rotate(0.2deg);
+        }
+
+        /* Scrapbook Canvas */
+        .scrapbook-canvas {
+            position: relative;
+            min-height: 300px;
+            margin: 25px 0;
+            padding: 30px;
+        }
+
+        /* 아이템이 없을 때만 적용 */
+        .scrapbook-canvas:not(:has(.scrapbook-item)) {
+            background: rgba(255, 248, 230, 0.4);
+            border: 3px dashed #d4c4a8;
+            border-radius: 15px;
+            transform: rotate(-0.2deg);
+        }
+
+        .canvas-placeholder {
+            text-align: center;
+            color: #a89885;
+            font-style: italic;
+            margin-top: 100px;
+            font-family: 'Shadows Into Light', cursive;
+            font-size: 20px;
+            transform: rotate(-0.8deg);
+        }
+
+        /* Scrapbook Items */
+        .scrapbook-item {
+            position: absolute;
+            cursor: move;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .scrapbook-item:hover {
+            border-color: #ff6b9d;
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .scrapbook-photo {
+            max-width: 160px;
+            max-height: 160px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border: 5px solid #fff;
+            transform: rotate(-4deg);
+            transition: transform 0.3s ease;
+        }
+
+        .scrapbook-photo:hover {
+            transform: rotate(-1deg) scale(1.08);
+        }
+
+        .scrapbook-sticker {
+            font-size: 50px;
+            padding: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: rotate(8deg);
+        }
+
+        .scrapbook-sticker:hover {
+            transform: rotate(0deg) scale(1.15);
+        }
+
+        .scrapbook-text {
+            background: rgba(255, 248, 230, 0.95);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-family: 'Amatic SC', cursive;
+            font-size: 24px;
+            color: #5a4f45;
+            max-width: 200px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+            border: 3px solid #e8dcc0;
+        }
+
+        .scrapbook-text:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        /* Item Controls */
+        .item-controls {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            display: none;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .scrapbook-item:hover .item-controls {
+            display: flex;
+        }
+
+        .control-btn {
+            width: 28px;
+            height: 28px;
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(255, 107, 157, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn.delete {
+            background: #ff4757;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.2);
         }
 
         /* Review Entry Styles */
-        .diary-entry.review .text-side {
-            background: #fafafa;
-        }
-
         .review-category {
             display: inline-block;
-            padding: 4px 12px;
-            background: #1a1a1a;
+            padding: 10px 20px;
+            background: #8b7a6b;
             color: white;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            border-radius: 15px;
-            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: lowercase;
+            letter-spacing: 0.8px;
+            font-weight: 400;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            font-family: 'Patrick Hand', cursive;
+            transform: rotate(-0.8deg);
+            box-shadow: 0 3px 10px rgba(139, 122, 107, 0.3);
         }
 
         .review-rating {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 25px;
+            transform: rotate(0.3deg);
         }
 
         .stars {
-            color: #ffc107;
-            font-size: 18px;
+            color: #ffd32a;
+            font-size: 22px;
         }
 
         .rating-text {
-            color: #666;
-            font-size: 13px;
-            font-weight: 500;
+            color: #8b7a6b;
+            font-size: 16px;
+            font-weight: 400;
+            font-family: 'Indie Flower', cursive;
         }
 
         /* Create Button */
@@ -576,23 +435,24 @@
             position: fixed;
             bottom: 40px;
             right: 40px;
-            width: 56px;
-            height: 56px;
-            background: #1a1a1a;
+            width: 64px;
+            height: 64px;
+            background: #ff6b9d;
             border: none;
-            border-radius: 50%;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 6px 25px rgba(26, 26, 26, 0.2);
             transition: all 0.3s ease;
             z-index: 1000;
+            border-radius: 50%;
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            font-family: 'Amatic SC', cursive;
         }
 
         .create-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(26, 26, 26, 0.3);
+            background: #ff5a8a;
+            transform: scale(1.1) rotate(90deg);
         }
 
         /* Modal */
@@ -603,9 +463,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             z-index: 2000;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
         }
 
         .modal-content {
@@ -613,27 +473,30 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
-            padding: 40px;
+            background: #faf9f7;
+            padding: 45px;
             width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
+            max-width: 750px;
+            max-height: 85vh;
             overflow-y: auto;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 3px solid #e0ddd7;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .modal-header {
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 2px solid #e8dcc0;
         }
 
         .modal-title {
-            font-size: 1.4rem;
-            color: #1a1a1a;
-            font-weight: 600;
+            font-size: 2rem;
+            color: #4a3f35;
+            font-weight: 700;
             letter-spacing: -0.2px;
+            font-family: 'Amatic SC', cursive;
+            transform: rotate(-0.5deg);
         }
 
         .form-group {
@@ -642,34 +505,37 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: #555;
-            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #5a4f45;
+            text-transform: lowercase;
             letter-spacing: 0.5px;
             font-weight: 600;
+            font-family: 'Patrick Hand', cursive;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            background: #fafafa;
-            font-size: 14px;
-            font-family: inherit;
+            padding: 16px 18px;
+            border: 3px solid #e8dcc0;
+            background: rgba(255, 248, 230, 0.8);
+            font-size: 15px;
+            font-family: 'Indie Flower', cursive;
             font-weight: 400;
             transition: all 0.3s ease;
+            border-radius: 12px;
+            color: #5a4f45;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #1a1a1a;
+            border-color: #ff6b9d;
             background: white;
+            transform: scale(1.02);
         }
 
         .form-group textarea {
@@ -677,56 +543,143 @@
             resize: vertical;
         }
 
+        /* Photo Upload */
+        .photo-upload {
+            border: 4px dashed #d4c4a8;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 248, 230, 0.4);
+            font-family: 'Shadows Into Light', cursive;
+            color: #8b7a6b;
+            font-size: 18px;
+        }
+
+        .photo-upload:hover {
+            border-color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.08);
+            transform: scale(1.02);
+        }
+
+        .photo-upload input[type="file"] {
+            display: none;
+        }
+
+        .photo-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .photo-preview img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid #e8dcc0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-preview img:hover {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        /* Scrapbook Tools */
+        .scrapbook-tools {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 248, 230, 0.6);
+            border-radius: 15px;
+            border: 2px solid #e8dcc0;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 12px 20px;
+            border: 3px solid #d4c4a8;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            font-family: 'Patrick Hand', cursive;
+            color: #5a4f45;
+            transform: rotate(-0.8deg);
+        }
+
+        .tool-btn:hover {
+            background: #fff8e7;
+            transform: rotate(0deg) scale(1.08);
+            border-color: #c7b299;
+        }
+
+        .tool-btn.active {
+            background: #ff6b9d;
+            color: white;
+            border-color: #ff6b9d;
+            transform: rotate(0deg);
+        }
+
         .form-actions {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             justify-content: flex-end;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
+            padding-top: 25px;
+            border-top: 2px solid #e8dcc0;
         }
 
         .btn {
-            padding: 12px 24px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            background: white;
-            color: #555;
-            font-size: 13px;
+            padding: 15px 30px;
+            border: 3px solid #d4c4a8;
+            background: rgba(255, 255, 255, 0.9);
+            color: #5a4f45;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 0.5px;
+            border-radius: 15px;
+            font-family: 'Patrick Hand', cursive;
         }
 
         .btn-primary {
-            background: #1a1a1a;
+            background: #ff6b9d;
             color: white;
-            border-color: #1a1a1a;
+            border-color: #ff6b9d;
         }
 
         .btn:hover {
-            background: #f5f5f5;
+            background: #fff8e7;
+            transform: scale(1.05);
         }
 
         .btn-primary:hover {
-            background: #333;
-            border-color: #333;
+            background: #ff5a8a;
+            border-color: #ff5a8a;
         }
 
         /* Footer */
         footer {
-            background: #fefefe;
-            border-top: 1px solid #e8e8e8;
+            background: #faf9f7;
+            border-top: 2px solid #e8dcc0;
             padding: 60px 0 40px;
             text-align: center;
         }
 
         .footer-content {
-            color: #888;
-            font-size: 13px;
+            color: #8b7a6b;
+            font-size: 14px;
             line-height: 1.8;
             font-weight: 400;
+            font-family: 'Shadows Into Light', cursive;
         }
 
         .footer-links {
@@ -737,15 +690,34 @@
         }
 
         .footer-links a {
-            color: #888;
+            color: #8b7a6b;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             transition: color 0.3s ease;
+            font-family: 'Patrick Hand', cursive;
         }
 
         .footer-links a:hover {
-            color: #1a1a1a;
+            color: #ff6b9d;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 40px;
+            background: #ff6b9d;
+            color: white;
+            padding: 18px 30px;
+            font-size: 16px;
+            z-index: 3000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            font-family: 'Patrick Hand', cursive;
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
         }
 
         /* Animations */
@@ -767,31 +739,36 @@
             }
             
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
             .diary-entry {
-                grid-template-columns: 1fr;
                 margin-bottom: 60px;
-            }
-            
-            .photo-side {
-                min-height: 400px;
-            }
-            
-            .text-side {
                 padding: 30px 25px;
-                min-height: auto;
             }
-            
-            .text-side::before {
-                display: none;
+
+            .entry-actions {
+                opacity: 1;
+                top: 10px;
+                right: 10px;
+            }
+
+            .scrapbook-tools {
+                flex-wrap: wrap;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 30px 25px;
+            }
+
+            .entry-title {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -800,7 +777,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h1 class="hero-title">Joo suis mignonne</h1>
@@ -809,244 +785,427 @@
         </div>
     </section>
 
-    <!-- Main Content -->
     <section class="main-content">
-        <div class="container">
-            <!-- Diary Entry 1 -->
-            <article class="diary-entry" onclick="openModal('diary')">
-                <div class="photo-side">
-                    <div class="photo-image">📸</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 8, 2024</div>
-                    </div>
-                    <h3 class="entry-title">오늘의 커피 한 잔</h3>
-                    <div class="entry-content">
-                        좋은 책과 함께하는 여유로운 오후. 카페에서 마신 라떼 한 잔의 여유가 
-                        하루를 특별하게 만들어준다. 이런 작은 순간들이 모여서 인생이 되는 것 같다.
-                        바쁜 일상 속에서도 이런 여유로운 시간을 갖는 것이 얼마나 소중한지 새삼 느낀다.
-                        책 속의 문장들이 마음에 와닿고, 따뜻한 커피 향이 마음을 편안하게 만든다.
-                        오늘처럼 평범하지만 특별한 하루가 계속 이어지길 바란다.
-                    </div>
-                </div>
-            </article>
-
-            <!-- Diary Entry 2 -->
-            <article class="diary-entry" onclick="openModal('diary')">
-                <div class="photo-side">
-                    <div class="photo-image">🤔</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 7, 2024</div>
-                    </div>
-                    <h3 class="entry-title">미래에 대한 생각</h3>
-                    <div class="entry-content">
-                        요즘 미래에 대해 생각할 일이 많다. 내가 정말 원하는 것이 무엇인지, 
-                        어떤 사람이 되고 싶은지에 대해 깊게 고민하고 있다. 답은 쉽게 나오지 않지만, 
-                        이런 고민 자체가 성장의 과정이라고 생각한다. 천천히, 조급해하지 말고 
-                        나만의 속도로 찾아가면 될 것이다. 완벽하지 않아도 괜찮다.
-                        지금 이 순간을 살아가는 것만으로도 충분히 의미 있다.
-                    </div>
-                </div>
-            </article>
-
-            <!-- Review Entry -->
-            <article class="diary-entry review" onclick="openModal('review')">
-                <div class="photo-side">
-                    <div class="photo-image">📚</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 6, 2024</div>
-                    </div>
-                    <span class="review-category">Book</span>
-                    <h3 class="entry-title">작은 것들의 신</h3>
-                    <div class="review-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-text">5/5</span>
-                    </div>
-                    <div class="entry-content">
-                        아룬다티 로이의 섬세한 문체로 그려낸 인도의 풍경이 인상적이었다. 
-                        가족의 비밀과 사회의 모순을 다룬 깊이 있는 소설. 읽는 내내 마음이 아프면서도 
-                        아름다운 문장들에 빠져들었다. 소설이 주는 여운이 오래도록 남을 것 같다.
-                        이런 책을 만날 때마다 독서의 즐거움을 다시 한번 느끼게 된다.
-                        문학이 주는 깊이 있는 감동을 오랜만에 경험했다.
-                    </div>
-                </div>
-            </article>
-
-            <!-- Diary Entry 3 -->
-            <article class="diary-entry" onclick="openModal('diary')">
-                <div class="photo-side">
-                    <div class="photo-image">🌸</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 5, 2024</div>
-                    </div>
-                    <h3 class="entry-title">산책길의 작은 발견</h3>
-                    <div class="entry-content">
-                        길가에서 만난 예쁜 꽃들이 주는 작은 기쁨. 바쁜 일상 속에서도 
-                        이런 아름다움을 놓치지 않으려고 노력한다. 자연이 주는 선물들을 
-                        마음에 담아두고 싶다. 작은 것들에서 행복을 찾는 능력이 
-                        점점 더 소중해지는 것 같다. 오늘도 이런 순간을 놓치지 않아서 다행이다.
-                        이런 평범한 일상이 실은 가장 특별한 것일지도 모른다.
-                    </div>
-                </div>
-            </article>
-
-            <!-- Movie Review Entry -->
-            <article class="diary-entry review" onclick="openModal('review')">
-                <div class="photo-side">
-                    <div class="photo-image">🎬</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 4, 2024</div>
-                    </div>
-                    <span class="review-category">Movie</span>
-                    <h3 class="entry-title">기생충</h3>
-                    <div class="review-rating">
-                        <span class="stars">⭐⭐⭐⭐⭐</span>
-                        <span class="rating-text">5/5</span>
-                    </div>
-                    <div class="entry-content">
-                        봉준호 감독의 탁월한 연출과 모든 배우들의 완벽한 연기. 
-                        계급 사회의 모순을 블랙 코미디로 풀어낸 걸작. 영화를 보고 나서도 
-                        오랫동안 생각하게 만드는 작품이다. 한국 영화의 위상을 전 세계에 
-                        알린 작품으로서의 의미도 크다. 다시 봐도 새로운 디테일을 발견하게 된다.
-                        영화가 주는 메시지의 깊이에 다시 한번 감탄하게 된다.
-                    </div>
-                </div>
-            </article>
-
-            <!-- Diary Entry 4 -->
-            <article class="diary-entry" onclick="openModal('diary')">
-                <div class="photo-side">
-                    <div class="photo-image">🌅</div>
-                </div>
-                <div class="text-side">
-                    <div class="entry-header">
-                        <div class="entry-date">September 2, 2024</div>
-                    </div>
-                    <h3 class="entry-title">감사한 하루의 마무리</h3>
-                    <div class="entry-content">
-                        오늘 하루도 무사히 마무리되어간다. 창밖으로 보이는 일몰이 
-                        하루의 끝을 알린다. 감사한 마음으로 하루를 정리하며 내일을 준비한다.
-                        작은 일들에도 감사할 수 있는 마음이 생겼다. 평범한 일상이지만 
-                        이런 평범함이 얼마나 소중한지 알게 되었다. 오늘도 좋은 하루였다.
-                        내일도 이런 평온한 하루가 되기를 바란다.
-                    </div>
-                </div>
-            </article>
-        </div>
+        <div class="container" id="entries-container">
+            </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-links">
-                <a href="mailto:hello@example.com">Email</a>
-                <a href="#">Instagram</a>
-                <a href="#">YouTube</a>
-                <a href="#">Newsletter</a>
+                <a href="mailto:hello@example.com">email</a>
+                <a href="#">instagram</a>
+                <a href="#">youtube</a>
+                <a href="#">newsletter</a>
             </div>
             <div class="footer-content">
-                © 2024 Joo suis mignonne. All rights reserved.<br>
+                © 2024 Joo suis mignonne. all rights reserved.<br>
                 주형이의 공간에서 일상의 소중한 순간들을 기록합니다.
             </div>
         </div>
     </footer>
 
-    <!-- Create Button -->
     <button class="create-btn" onclick="openModal('create')">+</button>
 
-    <!-- Modal -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">새 글쓰기</h3>
+                <h3 class="modal-title">새 스크랩북 만들기</h3>
             </div>
             
             <form id="createForm">
                 <div class="form-group">
-                    <label>Type</label>
+                    <label>type</label>
                     <select id="contentType">
-                        <option value="diary">Diary</option>
-                        <option value="review">Review</option>
+                        <option value="diary">diary</option>
+                        <option value="review">review</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label>Title</label>
+                    <label>title</label>
                     <input type="text" id="contentTitle" placeholder="제목을 입력하세요">
                 </div>
                 
                 <div class="form-group">
-                    <label>Content</label>
-                    <textarea id="contentBody" placeholder="내용을 입력하세요" rows="6"></textarea>
+                    <label>content</label>
+                    <textarea id="contentBody" placeholder="내용을 입력하세요" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>사진 추가</label>
+                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                        <input type="file" id="photoInput" multiple accept="image/*" onchange="handlePhotoUpload(event)">
+                        <div>📷 클릭하거나 사진을 드래그해서 추가하세요</div>
+                        <div class="photo-preview" id="photoPreview"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>스크랩북 꾸미기</label>
+                    <div class="scrapbook-tools">
+                        <button type="button" class="tool-btn" onclick="addSticker('🌟')">⭐ 별</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('💖')">💖 하트</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('🌸')">🌸 꽃</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('☀️')">☀️ 태양</button>
+                        <button type="button" class="tool-btn" onclick="addSticker('🦋')">🦋 나비</button>
+                        <button type="button" class="tool-btn" onclick="addTextBox()">📝 텍스트</button>
+                    </div>
+                    <div class="scrapbook-canvas" id="scrapbookCanvas">
+                        <div class="canvas-placeholder">여기에 사진과 스티커를 자유롭게 배치해보세요!</div>
+                    </div>
                 </div>
             </form>
             
             <div class="form-actions">
-                <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveContent()">Save</button>
+                <button type="button" class="btn" onclick="closeModal()">cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveContent()">save</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+        let entries = [
+            {
+                id: 1,
+                type: 'diary',
+                title: 'lazy sunday afternoon ☕',
+                content: '좋은 책과 함께하는 여유로운 오후. 카페에서 마신 라떼 한 잔의 여유가 하루를 특별하게 만들어준다. 이런 작은 순간들이 모여서 인생이 되는 것 같아요.',
+                date: new Date().toLocaleDateString('ko-KR'),
+                scrapbookItems: [
+                    { type: 'sticker', content: '☕', x: 60, y: 30 },
+                    { type: 'sticker', content: '📚', x: 220, y: 90 },
+                    { type: 'text', content: 'good vibes only', x: 140, y: 160 }
+                ]
+            },
+            {
+                id: 2,
+                type: 'diary',
+                title: 'thinking about the future 🤔',
+                content: '요즘 미래에 대해 생각할 일이 많다. 내가 정말 원하는 것이 무엇인지, 어떤 사람이 되고 싶은지에 대해 깊게 고민하고 있어요. 답은 쉽게 나오지 않지만, 이런 고민 자체가 성장의 과정이라고 생각해요.',
+                date: new Date(Date.now() - 86400000).toLocaleDateString('ko-KR'),
+                scrapbookItems: [
+                    { type: 'sticker', content: '🤔', x: 80, y: 40 },
+                    { type: 'text', content: 'dreams come true', x: 160, y: 120 },
+                    { type: 'sticker', content: '🦋', x: 240, y: 70 }
+                ]
+            },
+            {
+                id: 3,
+                type: 'review',
+                title: '작은 것들의 신',
+                content: '아룬다티 로이의 섬세한 문체로 그려낸 인도의 풍경이 인상적이었어요. 가족의 비밀과 사회의 모순을 다룬 깊이 있는 소설. 읽는 내내 마음이 아프면서도 아름다운 문장들에 빠져들었습니다.',
+                date: new Date(Date.now() - 172800000).toLocaleDateString('ko-KR'),
+                scrapbookItems: [
+                    { type: 'sticker', content: '📚', x: 100, y: 50 },
+                    { type: 'sticker', content: '🌸', x: 200, y: 30 },
+                    { type: 'text', content: 'beautiful story', x: 130, y: 140 }
+                ]
+            }
+        ];
+
+        let currentEditId = null;
+        let nextId = entries.length + 1;
+        let currentScrapbookItems = [];
+        let uploadedPhotos = [];
+
+        document.addEventListener('DOMContentLoaded', renderEntries);
+
+        function handlePhotoUpload(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPhotos.push(e.target.result);
+                    updatePhotoPreview();
+                    addScrapbookItem({ type: 'photo', content: e.target.result });
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function updatePhotoPreview() {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+            uploadedPhotos.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.onclick = () => addScrapbookItem({ type: 'photo', content: photo });
+                preview.appendChild(img);
+            });
+        }
+
+        function addSticker(emoji) {
+            addScrapbookItem({ type: 'sticker', content: emoji });
+        }
+
+        function addTextBox() {
+            const text = prompt('텍스트를 입력하세요 (한국어/English/Français):');
+            if (text) {
+                addScrapbookItem({ type: 'text', content: text });
+            }
+        }
+
+        function addScrapbookItem(item) {
+            const canvas = document.getElementById('scrapbookCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = (Math.random() * (rect.width - 150)) + 15; // 랜덤 위치
+            const y = (Math.random() * (rect.height - 150)) + 15; // 랜덤 위치
+            currentScrapbookItems.push({ ...item, x, y });
+            renderScrapbookCanvas();
+        }
+
+        function renderScrapbookCanvas(items = currentScrapbookItems, containerId = 'scrapbookCanvas', isModal = true) {
+            const canvas = document.getElementById(containerId);
+            if (!canvas) return;
+
+            canvas.innerHTML = '';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'canvas-placeholder';
+            placeholder.textContent = isModal ? '여기에 사진과 스티커를 자유롭게 배치해보세요!' : '스크랩북이 비어있습니다';
+
+            if (items.length === 0) {
+                canvas.appendChild(placeholder);
+            } else {
+                items.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'scrapbook-item';
+                    itemEl.style.left = item.x + 'px';
+                    itemEl.style.top = item.y + 'px';
+                    if (isModal) itemEl.style.position = 'absolute';
+                    
+                    let innerEl;
+                    if (item.type === 'photo') {
+                        innerEl = document.createElement('img');
+                        innerEl.src = item.content;
+                        innerEl.className = 'scrapbook-photo';
+                    } else if (item.type === 'sticker') {
+                        innerEl = document.createElement('div');
+                        innerEl.textContent = item.content;
+                        innerEl.className = 'scrapbook-sticker';
+                    } else if (item.type === 'text') {
+                        innerEl = document.createElement('div');
+                        innerEl.textContent = item.content;
+                        innerEl.className = 'scrapbook-text';
+                    }
+                    itemEl.appendChild(innerEl);
+
+                    if (isModal) {
+                        const controls = document.createElement('div');
+                        controls.className = 'item-controls';
+                        controls.innerHTML = `<button class="control-btn delete" onclick="removeScrapbookItem(${index})">×</button>`;
+                        itemEl.appendChild(controls);
+                        makeDraggable(itemEl, index);
+                    }
+
+                    canvas.appendChild(itemEl);
+                });
+            }
+        }
+
+        function makeDraggable(element, index) {
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+
+            element.addEventListener('mousedown', dragStart);
+
+            function dragStart(e) {
+                initialX = e.clientX - element.offsetLeft;
+                initialY = e.clientY - element.offsetTop;
+                if (e.target.closest('.control-btn')) return;
+                isDragging = true;
+                element.style.zIndex = 1000;
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', dragEnd);
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                    element.style.left = currentX + 'px';
+                    element.style.top = currentY + 'px';
+                    
+                    if (currentScrapbookItems[index]) {
+                        currentScrapbookItems[index].x = currentX;
+                        currentScrapbookItems[index].y = currentY;
+                    }
+                }
+            }
+
+            function dragEnd() {
+                isDragging = false;
+                element.style.zIndex = 'auto';
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', dragEnd);
+            }
+        }
+
+        function removeScrapbookItem(index) {
+            currentScrapbookItems.splice(index, 1);
+            renderScrapbookCanvas();
+        }
+
+        function addNewEntry(type, title, content) {
+            const newEntry = {
+                id: nextId++,
+                type: type,
+                title: title,
+                content: content,
+                date: new Date().toLocaleDateString('ko-KR'),
+                scrapbookItems: [...currentScrapbookItems]
+            };
+            
+            entries.unshift(newEntry);
+            renderEntries();
+            showNotification('새 스크랩북이 추가되었습니다! 🎉');
+        }
+
+        function deleteEntry(id) {
+            if (confirm('정말로 이 글을 삭제하시겠습니까?')) {
+                entries = entries.filter(entry => entry.id !== id);
+                renderEntries();
+                showNotification('글이 삭제되었습니다.');
+            }
+        }
+
+        function editEntry(id) {
+            const entry = entries.find(e => e.id === id);
+            if (entry) {
+                currentEditId = id;
+                currentScrapbookItems = [...(entry.scrapbookItems || [])];
+                
+                document.getElementById('contentType').value = entry.type;
+                document.getElementById('contentTitle').value = entry.title;
+                document.getElementById('contentBody').value = entry.content;
+                
+                renderScrapbookCanvas();
+                
+                document.querySelector('.modal-title').textContent = '스크랩북 수정하기';
+                document.getElementById('modal').style.display = 'block';
+            }
+        }
+
+        function renderEntries() {
+            const container = document.getElementById('entries-container');
+            container.innerHTML = '';
+            
+            entries.forEach(entry => {
+                const entryHTML = createEntryHTML(entry);
+                container.insertAdjacentHTML('beforeend', entryHTML);
+            });
+            
+            entries.forEach(entry => {
+                const canvas = document.querySelector(`[data-id="${entry.id}"] .scrapbook-canvas`);
+                if (canvas) {
+                    renderScrapbookCanvas(entry.scrapbookItems, canvas.id || `canvas-${entry.id}`, false);
+                    canvas.id = `canvas-${entry.id}`; // id가 없는 경우 동적으로 할당
                 }
             });
-        });
-
-        // Header background change on scroll
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(254, 254, 254, 0.98)';
-                header.style.backdropFilter = 'blur(15px)';
-            } else {
-                header.style.background = 'rgba(254, 254, 254, 0.95)';
-                header.style.backdropFilter = 'blur(20px)';
-            }
-        });
-
-        // Modal functions
-        function openModal(type) {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'block';
             
-            // Set default content type
-            if (type !== 'create') {
-                document.getElementById('contentType').value = type;
-            }
+            applyScrollAnimations();
+        }
+        
+        function createEntryHTML(entry) {
+            const isReview = entry.type === 'review';
+            const reviewCategory = isReview ? '<span class="review-category">book review</span>' : '';
+            const reviewRating = isReview ? `
+                <div class="review-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="rating-text">5/5</span>
+                </div>
+            ` : '';
             
-            // Update modal title based on type
-            const modalTitle = document.querySelector('.modal-title');
-            const titles = {
-                'diary': '새 다이어리 쓰기',
-                'review': '새 리뷰 작성',
-                'create': '새 글쓰기'
-            };
-            modalTitle.textContent = titles[type] || '새 글쓰기';
+            return `
+                <article class="diary-entry ${isReview ? 'review' : ''}" data-id="${entry.id}">
+                    <div class="entry-actions">
+                        <button class="action-btn edit" onclick="event.stopPropagation(); editEntry(${entry.id})" title="수정">✏️</button>
+                        <button class="action-btn delete" onclick="event.stopPropagation(); deleteEntry(${entry.id})" title="삭제">🗑️</button>
+                    </div>
+                    
+                    <div class="entry-header">
+                        <div class="entry-date">${entry.date}</div>
+                    </div>
+                    
+                    ${reviewCategory}
+                    <h3 class="entry-title">${entry.title}</h3>
+                    ${reviewRating}
+                    <div class="entry-content">${entry.content}</div>
+                    
+                    <div class="scrapbook-canvas"></div>
+                </article>
+            `;
+        }
+
+        function showNotification(message) {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function applyScrollAnimations() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        const rotation = entry.target.classList.contains('diary-entry:nth-child(even)') ? '-0.3deg' : '0.5deg';
+                        entry.target.style.transform = `translateY(0) rotate(${rotation})`;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.diary-entry').forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(50px) rotate(0deg)';
+                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                
+                setTimeout(() => {
+                    observer.observe(item);
+                }, index * 100);
+            });
+        }
+
+        function openModal() {
+            currentEditId = null;
+            currentScrapbookItems = [];
+            uploadedPhotos = [];
+            document.getElementById('createForm').reset();
+            document.getElementById('photoPreview').innerHTML = '';
+            renderScrapbookCanvas();
+            document.querySelector('.modal-title').textContent = '새 스크랩북 만들기';
+            document.getElementById('modal').style.display = 'block';
         }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
             document.getElementById('createForm').reset();
+            currentEditId = null;
+            currentScrapbookItems = [];
+            uploadedPhotos = [];
+            document.getElementById('photoPreview').innerHTML = '';
         }
 
         function saveContent() {
@@ -1059,12 +1218,34 @@
                 return;
             }
             
-            // Here you would typically save to a database
-            alert(`${type} 포스트가 저장되었습니다!\n\n제목: ${title}\n내용: ${content.substring(0, 50)}...`);
+            if (currentEditId) {
+                const entryIndex = entries.findIndex(e => e.id === currentEditId);
+                if (entryIndex !== -1) {
+                    entries[entryIndex].type = type;
+                    entries[entryIndex].title = title;
+                    entries[entryIndex].content = content;
+                    entries[entryIndex].scrapbookItems = [...currentScrapbookItems];
+                    renderEntries();
+                    showNotification('스크랩북이 수정되었습니다! ✏️');
+                }
+            } else {
+                addNewEntry(type, title, content);
+            }
+            
             closeModal();
         }
 
-        // Click outside modal to close
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(250, 249, 247, 0.98)';
+                header.style.backdropFilter = 'blur(15px)';
+            } else {
+                header.style.background = 'rgba(250, 249, 247, 0.95)';
+                header.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
         window.addEventListener('click', function(e) {
             const modal = document.getElementById('modal');
             if (e.target === modal) {
@@ -1072,28 +1253,53 @@
             }
         });
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        const photoUploadElement = document.querySelector('.photo-upload');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            photoUploadElement.addEventListener(eventName, preventDefaults, false);
+        });
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            photoUploadElement.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            photoUploadElement.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            photoUploadElement.style.borderColor = '#ff6b9d';
+            photoUploadElement.style.background = 'rgba(255, 107, 157, 0.08)';
+        }
+
+        function unhighlight() {
+            photoUploadElement.style.borderColor = '#d4c4a8';
+            photoUploadElement.style.background = 'rgba(255, 248, 230, 0.4)';
+        }
+
+        photoUploadElement.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedPhotos.push(e.target.result);
+                        updatePhotoPreview();
+                        addScrapbookItem({ type: 'photo', content: e.target.result });
+                    };
+                    reader.readAsDataURL(file);
                 }
             });
-        }, observerOptions);
-
-        // Observe diary entries for scroll animations
-        document.querySelectorAll('.diary-entry').forEach(item => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(50px)';
-            item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            observer.observe(item);
-        });
+        }
     </script>
 </body>
 </html>
