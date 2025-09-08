@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joo suis mignonne</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&family=Caveat:wght@400;600&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&family=Caveat:wght@400;600&family=Kalam:wght@300;400&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* 기본 스타일 */
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +16,8 @@
         body {
             font-family: 'Patrick Hand', cursive;
             line-height: 1.6;
-            color: #5a4f45;
-            background: #faf9f7;
+            color: #333;
+            background: #f8f8f8;
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -30,9 +31,9 @@
 
         /* Header */
         header {
-            background: rgba(250, 249, 247, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid #e8dcc0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e0e0e0;
             position: fixed;
             width: 100%;
             top: 0;
@@ -48,13 +49,12 @@
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 600;
-            color: #5a4f45;
-            text-decoration: none;
-            letter-spacing: -0.3px;
             font-family: 'Amatic SC', cursive;
-            transform: rotate(-1deg);
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+            letter-spacing: -0.5px;
         }
 
         /* Hero Section */
@@ -64,8 +64,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('https://images.unsplash.com/photo-1517409425442-f049007f300c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -84,13 +84,14 @@
         }
 
         .hero-content {
-            max-width: 400px;
+            max-width: 500px;
             position: relative;
             z-index: 2;
         }
 
         .hero-title {
-            font-size: 4.2rem;
+            font-family: 'Roboto', sans-serif;
+            font-size: 4.8rem;
             margin-bottom: 15px;
             color: white;
             font-weight: 700;
@@ -98,12 +99,11 @@
             opacity: 0;
             animation: fadeInUp 1s ease 0.3s forwards;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            font-family: 'Amatic SC', cursive;
-            transform: rotate(-1deg);
         }
 
         .hero-subtitle {
-            font-size: 1.4rem;
+            font-family: 'Kalam', cursive;
+            font-size: 1.6rem;
             color: rgba(255,255,255,0.9);
             margin-bottom: 40px;
             font-weight: 400;
@@ -111,7 +111,6 @@
             opacity: 0;
             animation: fadeInUp 1s ease 0.6s forwards;
             text-shadow: 0 1px 5px rgba(0,0,0,0.3);
-            font-family: 'Shadows Into Light', cursive;
         }
 
         .hero-divider {
@@ -131,43 +130,25 @@
         /* Scrapbook Entry */
         .diary-entry {
             margin-bottom: 80px;
-            background: #faf9f7;
-            border: 1px solid #e0ddd7;
+            background: #fff;
+            border: 1px solid #e0e0e0;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            box-shadow: 0 3px 15px rgba(139, 130, 115, 0.2);
-            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
             overflow: hidden;
-            min-height: 600px;
             padding: 50px 40px;
-            transform: rotate(0.5deg);
-            /* 노트 줄 - 더 자연스럽게 */
-            background-image:
-                repeating-linear-gradient(
-                    transparent,
-                    transparent 26px,
-                    rgba(180, 170, 160, 0.12) 26px,
-                    rgba(180, 170, 160, 0.12) 27px
-                );
-            /* 종이 질감 */
-            background-color: #faf9f7;
-        }
-
-        .diary-entry.review {
-            background: #f1e9d8;
-            border: 1px solid #d4c4a8;
-            transform: rotate(-1.5deg);
-            box-shadow: 0 5px 20px rgba(139, 130, 115, 0.25);
+            min-height: 600px;
         }
 
         .diary-entry:nth-child(even) {
-            transform: rotate(-0.3deg);
+            background: #fafafa;
         }
 
         .diary-entry:hover {
-            transform: translateY(-5px) rotate(0deg);
-            box-shadow: 0 12px 35px rgba(139, 130, 115, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
         }
 
         /* Entry Actions */
@@ -190,7 +171,7 @@
             width: 32px;
             height: 32px;
             border: 2px solid rgba(255,255,255,0.8);
-            background: rgba(255, 107, 157, 0.9);
+            background: #555;
             color: white;
             font-size: 14px;
             cursor: pointer;
@@ -199,30 +180,28 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            box-shadow: 0 3px 10px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .action-btn:hover {
-            background: rgba(255, 107, 157, 1);
+            background: #222;
             transform: scale(1.1);
         }
 
         .action-btn.edit {
-            background: rgba(255, 193, 7, 0.9);
-            box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+            background: #777;
         }
 
         .action-btn.edit:hover {
-            background: rgba(255, 193, 7, 1);
+            background: #555;
         }
 
         .action-btn.delete {
-            background: rgba(255, 71, 87, 0.9);
-            box-shadow: 0 3px 10px rgba(255, 71, 87, 0.3);
+            background: #999;
         }
 
         .action-btn.delete:hover {
-            background: rgba(255, 71, 87, 1);
+            background: #777;
         }
 
         /* Entry Header */
@@ -235,66 +214,57 @@
         }
 
         .entry-date {
+            font-family: 'Roboto', sans-serif;
             font-size: 13px;
-            color: #8b7a6b;
-            text-transform: lowercase;
+            color: #777;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 400;
-            font-family: 'Patrick Hand', cursive;
-            background: rgba(255, 248, 230, 0.8);
+            background: #eee;
             padding: 8px 16px;
             border-radius: 25px;
-            border: 2px solid #e8dcc0;
-            transform: rotate(-1.5deg);
-            box-shadow: 0 2px 8px rgba(232, 220, 192, 0.3);
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .entry-title {
+            font-family: 'Amatic SC', cursive;
             font-size: 3rem;
-            color: #4a3f35;
+            color: #222;
             font-weight: 700;
             margin-bottom: 30px;
-            font-family: 'Amatic SC', cursive;
             line-height: 1.1;
             letter-spacing: 0.5px;
-            transform: rotate(-0.5deg);
         }
 
         .entry-content {
-            color: #5a4f45;
+            font-family: 'Indie Flower', cursive;
+            color: #555;
             line-height: 1.9;
             font-size: 17px;
             font-weight: 400;
-            font-family: 'Indie Flower', cursive;
             letter-spacing: 0.3px;
             margin-bottom: 30px;
-            transform: rotate(0.2deg);
         }
 
         /* Scrapbook Canvas */
         .scrapbook-canvas {
             position: relative;
             min-height: 300px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
             margin: 25px 0;
             padding: 30px;
         }
 
-        /* 아이템이 없을 때만 적용 */
-        .scrapbook-canvas:not(:has(.scrapbook-item)) {
-            background: rgba(255, 248, 230, 0.4);
-            border: 3px dashed #d4c4a8;
-            border-radius: 15px;
-            transform: rotate(-0.2deg);
-        }
-
         .canvas-placeholder {
             text-align: center;
-            color: #a89885;
+            color: #aaa;
             font-style: italic;
             margin-top: 100px;
             font-family: 'Shadows Into Light', cursive;
             font-size: 20px;
-            transform: rotate(-0.8deg);
         }
 
         /* Scrapbook Items */
@@ -304,55 +274,45 @@
             border: 2px solid transparent;
             border-radius: 12px;
             transition: all 0.3s ease;
+            resize: both;
+            overflow: hidden;
+            min-width: 50px;
+            min-height: 50px;
+            padding: 5px;
         }
 
         .scrapbook-item:hover {
-            border-color: #ff6b9d;
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+            border-color: #777;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         .scrapbook-photo {
-            max-width: 160px;
-            max-height: 160px;
+            max-width: 100%;
+            height: auto;
             border-radius: 8px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             border: 5px solid #fff;
-            transform: rotate(-4deg);
-            transition: transform 0.3s ease;
         }
-
-        .scrapbook-photo:hover {
-            transform: rotate(-1deg) scale(1.08);
-        }
-
+        
         .scrapbook-sticker {
             font-size: 50px;
             padding: 10px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transform: rotate(8deg);
-        }
-
-        .scrapbook-sticker:hover {
-            transform: rotate(0deg) scale(1.15);
         }
 
         .scrapbook-text {
-            background: rgba(255, 248, 230, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             padding: 15px 20px;
             border-radius: 15px;
             font-family: 'Amatic SC', cursive;
             font-size: 24px;
-            color: #5a4f45;
-            max-width: 200px;
+            color: #333;
+            max-width: 100%;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transform: rotate(-2deg);
-            border: 3px solid #e8dcc0;
-        }
-
-        .scrapbook-text:hover {
-            transform: rotate(0deg) scale(1.05);
+            resize: vertical;
+            overflow: hidden;
         }
 
         /* Item Controls */
@@ -372,7 +332,7 @@
         .control-btn {
             width: 28px;
             height: 28px;
-            background: #ff6b9d;
+            background: #555;
             color: white;
             border: none;
             border-radius: 50%;
@@ -381,12 +341,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(255, 107, 157, 0.4);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
         }
 
         .control-btn.delete {
-            background: #ff4757;
+            background: #999;
         }
 
         .control-btn:hover {
@@ -397,17 +357,16 @@
         .review-category {
             display: inline-block;
             padding: 10px 20px;
-            background: #8b7a6b;
+            background: #777;
             color: white;
             font-size: 14px;
-            text-transform: lowercase;
+            text-transform: uppercase;
             letter-spacing: 0.8px;
             font-weight: 400;
             border-radius: 25px;
             margin-bottom: 20px;
             font-family: 'Patrick Hand', cursive;
-            transform: rotate(-0.8deg);
-            box-shadow: 0 3px 10px rgba(139, 122, 107, 0.3);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .review-rating {
@@ -415,19 +374,17 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 25px;
-            transform: rotate(0.3deg);
         }
 
         .stars {
-            color: #ffd32a;
+            color: #ffc107;
             font-size: 22px;
         }
 
         .rating-text {
-            color: #8b7a6b;
-            font-size: 16px;
-            font-weight: 400;
+            color: #777;
             font-family: 'Indie Flower', cursive;
+            font-size: 16px;
         }
 
         /* Create Button */
@@ -437,7 +394,7 @@
             right: 40px;
             width: 64px;
             height: 64px;
-            background: #ff6b9d;
+            background: #333;
             border: none;
             color: white;
             font-size: 28px;
@@ -446,12 +403,12 @@
             transition: all 0.3s ease;
             z-index: 1000;
             border-radius: 50%;
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             font-family: 'Amatic SC', cursive;
         }
 
         .create-btn:hover {
-            background: #ff5a8a;
+            background: #222;
             transform: scale(1.1) rotate(90deg);
         }
 
@@ -473,13 +430,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #faf9f7;
+            background: #f8f8f8;
             padding: 45px;
             width: 90%;
             max-width: 750px;
             max-height: 85vh;
             overflow-y: auto;
-            border: 3px solid #e0ddd7;
+            border: 3px solid #e0e0e0;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
@@ -487,16 +444,15 @@
         .modal-header {
             margin-bottom: 35px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #e8dcc0;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .modal-title {
-            font-size: 2rem;
-            color: #4a3f35;
+            font-family: 'Amatic SC', cursive;
+            font-size: 2.5rem;
+            color: #333;
             font-weight: 700;
             letter-spacing: -0.2px;
-            font-family: 'Amatic SC', cursive;
-            transform: rotate(-0.5deg);
         }
 
         .form-group {
@@ -504,14 +460,14 @@
         }
 
         .form-group label {
+            font-family: 'Roboto', sans-serif;
             display: block;
             margin-bottom: 10px;
             font-size: 16px;
-            color: #5a4f45;
-            text-transform: lowercase;
+            color: #555;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 600;
-            font-family: 'Patrick Hand', cursive;
         }
 
         .form-group input,
@@ -519,23 +475,22 @@
         .form-group select {
             width: 100%;
             padding: 16px 18px;
-            border: 3px solid #e8dcc0;
-            background: rgba(255, 248, 230, 0.8);
+            border: 2px solid #ddd;
+            background: #fff;
             font-size: 15px;
             font-family: 'Indie Flower', cursive;
             font-weight: 400;
             transition: all 0.3s ease;
-            border-radius: 12px;
-            color: #5a4f45;
+            border-radius: 8px;
+            color: #333;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #ff6b9d;
-            background: white;
-            transform: scale(1.02);
+            border-color: #555;
+            box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
         }
 
         .form-group textarea {
@@ -545,22 +500,21 @@
 
         /* Photo Upload */
         .photo-upload {
-            border: 4px dashed #d4c4a8;
-            border-radius: 20px;
+            border: 3px dashed #ddd;
+            border-radius: 15px;
             padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(255, 248, 230, 0.4);
+            background: #fafafa;
             font-family: 'Shadows Into Light', cursive;
-            color: #8b7a6b;
+            color: #999;
             font-size: 18px;
         }
 
         .photo-upload:hover {
-            border-color: #ff6b9d;
-            background: rgba(255, 107, 157, 0.08);
-            transform: scale(1.02);
+            border-color: #555;
+            background: #f0f0f0;
         }
 
         .photo-upload input[type="file"] {
@@ -579,7 +533,7 @@
             height: 90px;
             object-fit: cover;
             border-radius: 8px;
-            border: 3px solid #e8dcc0;
+            border: 3px solid #eee;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
@@ -593,38 +547,36 @@
             display: flex;
             gap: 15px;
             margin-bottom: 25px;
-            padding: 20px;
-            background: rgba(255, 248, 230, 0.6);
-            border-radius: 15px;
-            border: 2px solid #e8dcc0;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
             flex-wrap: wrap;
         }
 
         .tool-btn {
-            padding: 12px 20px;
-            border: 3px solid #d4c4a8;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
+            padding: 10px 18px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 400;
             transition: all 0.3s ease;
             font-family: 'Patrick Hand', cursive;
-            color: #5a4f45;
-            transform: rotate(-0.8deg);
+            color: #555;
         }
 
         .tool-btn:hover {
-            background: #fff8e7;
-            transform: rotate(0deg) scale(1.08);
-            border-color: #c7b299;
+            background: #f0f0f0;
+            transform: scale(1.05);
+            border-color: #999;
         }
 
         .tool-btn.active {
-            background: #ff6b9d;
+            background: #333;
             color: white;
-            border-color: #ff6b9d;
-            transform: rotate(0deg);
+            border-color: #333;
         }
 
         .form-actions {
@@ -632,50 +584,50 @@
             gap: 15px;
             justify-content: flex-end;
             padding-top: 25px;
-            border-top: 2px solid #e8dcc0;
+            border-top: 2px solid #e0e0e0;
         }
 
         .btn {
             padding: 15px 30px;
-            border: 3px solid #d4c4a8;
-            background: rgba(255, 255, 255, 0.9);
-            color: #5a4f45;
+            border: 2px solid #ccc;
+            background: #fff;
+            color: #555;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: lowercase;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-radius: 15px;
+            border-radius: 12px;
             font-family: 'Patrick Hand', cursive;
         }
 
         .btn-primary {
-            background: #ff6b9d;
+            background: #333;
             color: white;
-            border-color: #ff6b9d;
+            border-color: #333;
         }
 
         .btn:hover {
-            background: #fff8e7;
+            background: #f0f0f0;
             transform: scale(1.05);
         }
 
         .btn-primary:hover {
-            background: #ff5a8a;
-            border-color: #ff5a8a;
+            background: #222;
+            border-color: #222;
         }
 
         /* Footer */
         footer {
-            background: #faf9f7;
-            border-top: 2px solid #e8dcc0;
+            background: #f8f8f8;
+            border-top: 2px solid #e0e0e0;
             padding: 60px 0 40px;
             text-align: center;
         }
 
         .footer-content {
-            color: #8b7a6b;
+            color: #999;
             font-size: 14px;
             line-height: 1.8;
             font-weight: 400;
@@ -690,7 +642,7 @@
         }
 
         .footer-links a {
-            color: #8b7a6b;
+            color: #999;
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
@@ -699,7 +651,7 @@
         }
 
         .footer-links a:hover {
-            color: #ff6b9d;
+            color: #333;
         }
 
         /* Notification */
@@ -707,7 +659,7 @@
             position: fixed;
             top: 100px;
             right: 40px;
-            background: #ff6b9d;
+            background: #333;
             color: white;
             padding: 18px 30px;
             font-size: 16px;
@@ -717,7 +669,7 @@
             transition: all 0.3s ease;
             border-radius: 15px;
             font-family: 'Patrick Hand', cursive;
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Animations */
@@ -739,7 +691,7 @@
             }
             
             .hero-title {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             
             .diary-entry {
@@ -779,7 +731,7 @@
 
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1 class="hero-title">Joo suis mignonne</h1>
+            <h1 class="hero-title">Monochrome Diary</h1>
             <p class="hero-subtitle">La vie ne fait que plaisanter</p>
             <div class="hero-divider"></div>
         </div>
@@ -873,9 +825,9 @@
                 content: '좋은 책과 함께하는 여유로운 오후. 카페에서 마신 라떼 한 잔의 여유가 하루를 특별하게 만들어준다. 이런 작은 순간들이 모여서 인생이 되는 것 같아요.',
                 date: new Date().toLocaleDateString('ko-KR'),
                 scrapbookItems: [
-                    { type: 'sticker', content: '☕', x: 60, y: 30 },
-                    { type: 'sticker', content: '📚', x: 220, y: 90 },
-                    { type: 'text', content: 'good vibes only', x: 140, y: 160 }
+                    { type: 'sticker', content: '☕', x: 60, y: 30, width: 70, height: 70 },
+                    { type: 'sticker', content: '📚', x: 220, y: 90, width: 70, height: 70 },
+                    { type: 'text', content: 'good vibes only', x: 140, y: 160, width: 200, height: 50 }
                 ]
             },
             {
@@ -885,9 +837,9 @@
                 content: '요즘 미래에 대해 생각할 일이 많다. 내가 정말 원하는 것이 무엇인지, 어떤 사람이 되고 싶은지에 대해 깊게 고민하고 있어요. 답은 쉽게 나오지 않지만, 이런 고민 자체가 성장의 과정이라고 생각해요.',
                 date: new Date(Date.now() - 86400000).toLocaleDateString('ko-KR'),
                 scrapbookItems: [
-                    { type: 'sticker', content: '🤔', x: 80, y: 40 },
-                    { type: 'text', content: 'dreams come true', x: 160, y: 120 },
-                    { type: 'sticker', content: '🦋', x: 240, y: 70 }
+                    { type: 'sticker', content: '🤔', x: 80, y: 40, width: 70, height: 70 },
+                    { type: 'text', content: 'dreams come true', x: 160, y: 120, width: 200, height: 50 },
+                    { type: 'sticker', content: '🦋', x: 240, y: 70, width: 70, height: 70 }
                 ]
             },
             {
@@ -897,9 +849,9 @@
                 content: '아룬다티 로이의 섬세한 문체로 그려낸 인도의 풍경이 인상적이었어요. 가족의 비밀과 사회의 모순을 다룬 깊이 있는 소설. 읽는 내내 마음이 아프면서도 아름다운 문장들에 빠져들었습니다.',
                 date: new Date(Date.now() - 172800000).toLocaleDateString('ko-KR'),
                 scrapbookItems: [
-                    { type: 'sticker', content: '📚', x: 100, y: 50 },
-                    { type: 'sticker', content: '🌸', x: 200, y: 30 },
-                    { type: 'text', content: 'beautiful story', x: 130, y: 140 }
+                    { type: 'sticker', content: '📚', x: 100, y: 50, width: 70, height: 70 },
+                    { type: 'sticker', content: '🌸', x: 200, y: 30, width: 70, height: 70 },
+                    { type: 'text', content: 'beautiful story', x: 130, y: 140, width: 200, height: 50 }
                 ]
             }
         ];
@@ -936,21 +888,21 @@
         }
 
         function addSticker(emoji) {
-            addScrapbookItem({ type: 'sticker', content: emoji });
+            addScrapbookItem({ type: 'sticker', content: emoji, width: 70, height: 70 });
         }
 
         function addTextBox() {
-            const text = prompt('텍스트를 입력하세요 (한국어/English/Français):');
+            const text = prompt('텍스트를 입력하세요:');
             if (text) {
-                addScrapbookItem({ type: 'text', content: text });
+                addScrapbookItem({ type: 'text', content: text, width: 200, height: 50 });
             }
         }
 
         function addScrapbookItem(item) {
             const canvas = document.getElementById('scrapbookCanvas');
             const rect = canvas.getBoundingClientRect();
-            const x = (Math.random() * (rect.width - 150)) + 15; // 랜덤 위치
-            const y = (Math.random() * (rect.height - 150)) + 15; // 랜덤 위치
+            const x = (Math.random() * (rect.width - 150)) + 15;
+            const y = (Math.random() * (rect.height - 150)) + 15;
             currentScrapbookItems.push({ ...item, x, y });
             renderScrapbookCanvas();
         }
@@ -972,6 +924,8 @@
                     itemEl.className = 'scrapbook-item';
                     itemEl.style.left = item.x + 'px';
                     itemEl.style.top = item.y + 'px';
+                    itemEl.style.width = item.width ? item.width + 'px' : '';
+                    itemEl.style.height = item.height ? item.height + 'px' : '';
                     if (isModal) itemEl.style.position = 'absolute';
                     
                     let innerEl;
@@ -983,10 +937,12 @@
                         innerEl = document.createElement('div');
                         innerEl.textContent = item.content;
                         innerEl.className = 'scrapbook-sticker';
+                        innerEl.style.fontSize = item.width ? item.width * 0.7 + 'px' : '50px';
                     } else if (item.type === 'text') {
                         innerEl = document.createElement('div');
                         innerEl.textContent = item.content;
                         innerEl.className = 'scrapbook-text';
+                        innerEl.style.fontSize = item.width ? item.width * 0.12 + 'px' : '24px';
                     }
                     itemEl.appendChild(innerEl);
 
@@ -995,7 +951,7 @@
                         controls.className = 'item-controls';
                         controls.innerHTML = `<button class="control-btn delete" onclick="removeScrapbookItem(${index})">×</button>`;
                         itemEl.appendChild(controls);
-                        makeDraggable(itemEl, index);
+                        makeDraggableAndResizable(itemEl, index);
                     }
 
                     canvas.appendChild(itemEl);
@@ -1003,45 +959,74 @@
             }
         }
 
-        function makeDraggable(element, index) {
+        function makeDraggableAndResizable(element, index) {
             let isDragging = false;
-            let currentX;
-            let currentY;
-            let initialX;
-            let initialY;
+            let isResizing = false;
+            let startX, startY, initialX, initialY, initialWidth, initialHeight;
+            let item = currentScrapbookItems[index];
 
-            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('control-btn')) return;
+                
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = element.offsetLeft;
+                initialY = element.offsetTop;
+                initialWidth = element.offsetWidth;
+                initialHeight = element.offsetHeight;
 
-            function dragStart(e) {
-                initialX = e.clientX - element.offsetLeft;
-                initialY = e.clientY - element.offsetTop;
-                if (e.target.closest('.control-btn')) return;
-                isDragging = true;
+                if (e.target.classList.contains('scrapbook-text') || e.target.classList.contains('scrapbook-sticker')) {
+                    isResizing = true;
+                } else {
+                    isDragging = true;
+                }
                 element.style.zIndex = 1000;
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('mouseup', dragEnd);
-            }
 
-            function drag(e) {
+                document.addEventListener('mousemove', dragOrResize);
+                document.addEventListener('mouseup', stopDragOrResize);
+            });
+
+            function dragOrResize(e) {
+                e.preventDefault();
                 if (isDragging) {
-                    e.preventDefault();
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                    element.style.left = currentX + 'px';
-                    element.style.top = currentY + 'px';
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    element.style.left = initialX + dx + 'px';
+                    element.style.top = initialY + dy + 'px';
                     
-                    if (currentScrapbookItems[index]) {
-                        currentScrapbookItems[index].x = currentX;
-                        currentScrapbookItems[index].y = currentY;
+                    item.x = initialX + dx;
+                    item.y = initialY + dy;
+                } else if (isResizing) {
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    let newWidth = initialWidth + dx;
+                    let newHeight = initialHeight + dy;
+
+                    if (newWidth > 50 && newHeight > 50) {
+                        element.style.width = newWidth + 'px';
+                        element.style.height = newHeight + 'px';
+                        item.width = newWidth;
+                        item.height = newHeight;
+                        
+                        // 텍스트, 스티커 크기 재조정
+                        const innerEl = element.querySelector('.scrapbook-sticker, .scrapbook-text');
+                        if (innerEl) {
+                            if (innerEl.classList.contains('scrapbook-sticker')) {
+                                innerEl.style.fontSize = newWidth * 0.7 + 'px';
+                            } else if (innerEl.classList.contains('scrapbook-text')) {
+                                innerEl.style.fontSize = newWidth * 0.12 + 'px';
+                            }
+                        }
                     }
                 }
             }
 
-            function dragEnd() {
+            function stopDragOrResize() {
                 isDragging = false;
+                isResizing = false;
                 element.style.zIndex = 'auto';
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('mousemove', dragOrResize);
+                document.removeEventListener('mouseup', stopDragOrResize);
             }
         }
 
@@ -1097,13 +1082,11 @@
             entries.forEach(entry => {
                 const entryHTML = createEntryHTML(entry);
                 container.insertAdjacentHTML('beforeend', entryHTML);
-            });
-            
-            entries.forEach(entry => {
-                const canvas = document.querySelector(`[data-id="${entry.id}"] .scrapbook-canvas`);
+                
+                const canvasId = `canvas-${entry.id}`;
+                const canvas = document.getElementById(canvasId);
                 if (canvas) {
-                    renderScrapbookCanvas(entry.scrapbookItems, canvas.id || `canvas-${entry.id}`, false);
-                    canvas.id = `canvas-${entry.id}`; // id가 없는 경우 동적으로 할당
+                    renderScrapbookCanvas(entry.scrapbookItems, canvasId, false);
                 }
             });
             
@@ -1136,7 +1119,7 @@
                     ${reviewRating}
                     <div class="entry-content">${entry.content}</div>
                     
-                    <div class="scrapbook-canvas"></div>
+                    <div class="scrapbook-canvas" id="canvas-${entry.id}"></div>
                 </article>
             `;
         }
@@ -1167,8 +1150,7 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
-                        const rotation = entry.target.classList.contains('diary-entry:nth-child(even)') ? '-0.3deg' : '0.5deg';
-                        entry.target.style.transform = `translateY(0) rotate(${rotation})`;
+                        entry.target.style.transform = 'translateY(0)';
                         observer.unobserve(entry.target);
                     }
                 });
@@ -1179,7 +1161,7 @@
 
             document.querySelectorAll('.diary-entry').forEach((item, index) => {
                 item.style.opacity = '0';
-                item.style.transform = 'translateY(50px) rotate(0deg)';
+                item.style.transform = 'translateY(50px)';
                 item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
                 
                 setTimeout(() => {
@@ -1238,11 +1220,11 @@
         window.addEventListener('scroll', function() {
             const header = document.querySelector('header');
             if (window.scrollY > 50) {
-                header.style.background = 'rgba(250, 249, 247, 0.98)';
-                header.style.backdropFilter = 'blur(15px)';
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.backdropFilter = 'blur(10px)';
             } else {
-                header.style.background = 'rgba(250, 249, 247, 0.95)';
-                header.style.backdropFilter = 'blur(20px)';
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
             }
         });
 
@@ -1273,13 +1255,13 @@
         });
 
         function highlight() {
-            photoUploadElement.style.borderColor = '#ff6b9d';
-            photoUploadElement.style.background = 'rgba(255, 107, 157, 0.08)';
+            photoUploadElement.style.borderColor = '#555';
+            photoUploadElement.style.background = '#f0f0f0';
         }
 
         function unhighlight() {
-            photoUploadElement.style.borderColor = '#d4c4a8';
-            photoUploadElement.style.background = 'rgba(255, 248, 230, 0.4)';
+            photoUploadElement.style.borderColor = '#ddd';
+            photoUploadElement.style.background = '#fafafa';
         }
 
         photoUploadElement.addEventListener('drop', handleDrop, false);
@@ -1294,7 +1276,7 @@
                     reader.onload = function(e) {
                         uploadedPhotos.push(e.target.result);
                         updatePhotoPreview();
-                        addScrapbookItem({ type: 'photo', content: e.target.result });
+                        addScrapbookItem({ type: 'photo', content: e.target.result, width: 160, height: 160 });
                     };
                     reader.readAsDataURL(file);
                 }
