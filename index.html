@@ -897,3 +897,240 @@
                         
                         // 약간의 지연을 주어 실제 AI 처리하는 느낌 연출
                         setTimeout(() => {
+                            const colorCanvas = document.getElementById('colorPreview');
+                            const bwCanvas = document.getElementById('bwPreview');
+                            
+                            // 컬러 필름 효과 적용
+                            processedImages.color = processImageWithFilm(img, colorCanvas, 'color');
+                            
+                            // 흑백 필름 효과 적용
+                            processedImages.bw = processImageWithFilm(img, bwCanvas, 'bw');
+                            
+                            document.getElementById('photoPreview').style.display = 'block';
+                            document.getElementById('processingText').style.display = 'none';
+                            document.querySelector('.upload-text').textContent = 'Film processing complete - Choose your style below';
+                        }, 1500);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function generateScrapbook() {
+            const title = document.getElementById('titleInput').value.trim();
+            const content = document.getElementById('contentInput').value.trim();
+            const photoStyle = document.getElementById('photoStyle').value;
+
+            if (!uploadedPhoto || !title || !content) {
+                alert('Please fill in all fields and upload a photo');
+                return;
+            }
+
+            const container = document.getElementById('scrapbook-container');
+            container.innerHTML = '<div class="loading">Creating your entry...</div>';
+
+            setTimeout(() => {
+                const processedPhoto = photoStyle === 'color' ? processedImages.color : processedImages.bw;
+                
+                const scrapbookEntry = {
+                    id: Date.now(),
+                    photo: processedPhoto || uploadedPhoto, // 처리된 이미지가 없으면 원본 사용
+                    photoStyle: photoStyle,
+                    title: title,
+                    content: content,
+                    date: new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })
+                };
+
+                scrapbookData.unshift(scrapbookEntry);
+                renderScrapbook();
+                
+                // Clear form
+                document.getElementById('titleInput').value = '';
+                document.getElementById('contentInput').value = '';
+                document.getElementById('photoInput').value = '';
+                document.getElementById('photoStyle').value = 'color';
+                document.getElementById('photoPreview').style.display = 'none';
+                uploadedPhoto = null;
+                processedImages = { color: null, bw: null };
+                document.querySelector('.upload-text').textContent = 'Click to upload photo';
+            }, 1500);
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                scrapbookData = scrapbookData.filter(entry => entry.id !== id);
+                renderScrapbook();
+            }
+        }
+
+        function editEntry(id) {
+            const entry = scrapbookData.find(e => e.id === id);
+            if (!entry) return;
+
+            const entryElement = document.querySelector(`[data-id="${id}"]`);
+            const titleElement = entryElement.querySelector('.page-title');
+            const textElement = entryElement.querySelector('.page-text');
+            const actionsElement = entryElement.querySelector('.edit-actions');
+
+            titleElement.outerHTML = `<textarea class="edit-title" data-original="${entry.title}">${entry.title}</textarea>`;
+            textElement.outerHTML = `<textarea class="edit-text" data-original="${entry.content}">${entry.content}</textarea>`;
+            
+            actionsElement.innerHTML = `
+                <button class="save-btn" onclick="saveEntry(${id})">Save</button>
+                <button class="cancel-btn" onclick="cancelEdit(${id})">Cancel</button>
+            `;
+        }
+
+        function saveEntry(id) {
+            const entryElement = document.querySelector(`[data-id="${id}"]`);
+            const newTitle = entryElement.querySelector('.edit-title').value.trim();
+            const newText = entryElement.querySelector('.edit-text').value.trim();
+
+            if (!newTitle || !newText) {
+                alert('Title and content cannot be empty');
+                return;
+            }
+
+            const entry = scrapbookData.find(e => e.id === id);
+            entry.title = newTitle;
+            entry.content = newText;
+
+            renderScrapbook();
+        }
+
+        function cancelEdit(id) {
+            renderScrapbook();
+        }
+
+        function renderScrapbook() {
+            const container = document.getElementById('scrapbook-container');
+            container.innerHTML = '';
+
+            scrapbookData.forEach(entry => {
+                const pageHTML = createScrapbookPage(entry);
+                container.insertAdjacentHTML('beforeend', pageHTML);
+            });
+        }
+
+        function createScrapbookPage(entry) {
+            return `
+                <div class="scrapbook-page" data-id="${entry.id}">
+                    <img src="${entry.photo}" alt="memory" class="page-photo">
+                    <div class="page-content">
+                        <div class="edit-actions">
+                            <button class="edit-btn" onclick="editEntry(${entry.id})">Edit</button>
+                            <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
+                        </div>
+                        <h3 class="page-title" onclick="editEntry(${entry.id})">${entry.title}</h3>
+                        <p class="page-text" onclick="editEntry(${entry.id})">${entry.content}</p>
+                        <div class="page-date">${entry.date}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Travel Map Functions
+        function addPlace() {
+            const country = document.getElementById('countryInput').value.trim();
+            const place = document.getElementById('placeInput').value.trim();
+            const type = document.getElementById('placeType').value;
+
+            if (!country || !place) {
+                alert('Please enter country and place name');
+                return;
+            }
+
+            const newPlace = {
+                id: Date.now(),
+                country: country,
+                place: place,
+                type: type,
+                x: Math.random() * 80 + 10,
+                y: Math.random() * 60 + 20
+            };
+
+            travelData.push(newPlace);
+            renderMap();
+            renderCountries();
+
+            document.getElementById('countryInput').value = '';
+            document.getElementById('placeInput').value = '';
+        }
+
+        function renderMap() {
+            const map = document.getElementById('worldMap');
+            const existingMarkers = map.querySelectorAll('.map-marker');
+            existingMarkers.forEach(marker => marker.remove());
+
+            travelData.forEach(place => {
+                const marker = document.createElement('div');
+                marker.className = `map-marker marker-${place.type}`;
+                marker.style.left = place.x + '%';
+                marker.style.top = place.y + '%';
+
+                marker.innerHTML = `<div class="marker-tooltip">${place.place}, ${place.country}</div>`;
+                map.appendChild(marker);
+            });
+        }
+
+        function renderCountries() {
+            const grid = document.getElementById('countriesGrid');
+            const countries = {};
+
+            travelData.forEach(place => {
+                if (!countries[place.country]) {
+                    countries[place.country] = [];
+                }
+                countries[place.country].push(place);
+            });
+
+            grid.innerHTML = '';
+            Object.keys(countries).forEach(country => {
+                const places = countries[country];
+                const card = document.createElement('div');
+                card.className = 'country-card';
+                card.innerHTML = `
+                    <div class="country-name">${country}</div>
+                    <div class="country-places">
+                        ${places.map(p => `${p.place} (${p.type})`).join(', ')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize with sample data
+        window.addEventListener('load', function() {
+            const sampleEntry = {
+                id: 1,
+                photo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23e5e5e5"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-family="Arial" font-size="18">Sample Photo</text></svg>',
+                photoStyle: 'color',
+                title: 'Your memories will appear here',
+                content: 'Upload a photo and write your story to create beautiful film-processed entries. The AI film engine will give all your photos a consistent vintage camera look.',
+                date: new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })
+            };
+            
+            scrapbookData.push(sampleEntry);
+            renderScrapbook();
+
+            // Sample travel data
+            travelData.push(
+                { id: 1, country: 'Japan', place: 'Tokyo Tower', type: 'attraction', x: 75, y: 35 },
+                { id: 2, country: 'Japan', place: 'Ramen Shop', type: 'restaurant', x: 76, y: 36 },
+                { id: 3, country: 'France', place: 'Eiffel Tower', type: 'attraction', x: 45, y: 30 }
+            );
+            renderMap();
+            renderCountries();
+        });
+    </script>
+</body>
+</html
