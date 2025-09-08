@@ -460,7 +460,7 @@
                             </div>
                         </div>
                         <div class="processing" id="processingText" style="display: none;">
-                            Processing with AI film engine...
+                            Processing with enhanced AI film engine...
                         </div>
                     </div>
                 </div>
@@ -509,6 +509,7 @@
         let scrapbookData = [];
         let processedImages = { color: null, bw: null };
 
+        // Enhanced Film Processing Engine with all requested features
         class FilmProcessor {
             static applyFilmLook(imageData, style = 'color') {
                 const data = imageData.data;
@@ -526,55 +527,7 @@
                         data[i] = processed.r;
                         data[i + 1] = processed.g;
                         data[i + 2] = processed.b;
-                    }
-            
-            // 새로운 고급 기능: 계절별 색상 톤닝 (미세 강화)
-            static applySeasonalToning(data, width, height, style) {
-                // 가을 따뜻함을 미세하게 강화
-                const seasonalStrength = 0.1; // 매우 미묘한 강도
-                
-                for (let i = 0; i < data.length; i += 4) {
-                    if (style === 'color') {
-                        // 가을 톤: 오렌지/레드 미세 강화
-                        data[i] = Math.min(255, data[i] * (1 + seasonalStrength * 0.08)); // 빨강 미세 증가
-                        data[i + 1] = Math.min(255, data[i + 1] * (1 + seasonalStrength * 0.04)); // 초록 살짝 증가
-                        data[i + 2] = Math.max(0, data[i + 2] * (1 - seasonalStrength * 0.02)); // 파랑 살짝 감소
-                    }
-                }
-            }
-            
-            // 새로운 고급 기능: 펄린 노이즈 기반 고급 그레인 (미세 강화)
-            static applyAdvancedFilmGrain(data, width, height) {
-                for (let i = 0; i < data.length; i += 4) {
-                    const x = (i / 4) % width;
-                    const y = Math.floor((i / 4) / width);
-                    const luminance = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                    
-                    // 펄린 노이즈 시뮬레이션 (미세)
-                    const perlinNoise = this.perlinNoise(x * 0.01, y * 0.01) * 2;
-                    
-                    // 밝기 의존적 그레인: 어두운 곳에 더 강하게 (미세)
-                    const darknessBoost = luminance < 100 ? (100 - luminance) / 100 * 0.5 : 0;
-                    
-                    // 다중 옥타브 노이즈 (미세)
-                    const octave1 = Math.sin(x * 0.4) * Math.cos(y * 0.4) * 0.8;
-                    const octave2 = Math.sin(x * 0.24) * Math.cos(y * 0.24) * 0.4;
-                    const multiOctave = (octave1 + octave2) * 0.5;
-                    
-                    const finalGrain = (perlinNoise + multiOctave + darknessBoost) * 1.0;
-                    
-                    data[i] = Math.max(0, Math.min(255, data[i] + finalGrain));
-                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + finalGrain));
-                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + finalGrain));
-                }
-            }
-            
-            // 펄린 노이즈 함수 (단순화된 버전)
-            static perlinNoise(x, y) {
-                // 단순한 펄린 노이즈 근사
-                const a = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
-                return (a - Math.floor(a)) * 2 - 1;
-            } else {
+                    } else {
                         const processed = this.processVintageBW(r, g, b);
                         data[i] = processed.r;
                         data[i + 1] = processed.g;
@@ -582,47 +535,60 @@
                     }
                 }
                 
-                // 두 번째 패스: 부드러운 비네팅과 필름 그레인
+                // 새로운 고급 기능들 적용 (요청된 미세 강화)
+                this.applySeasonalToning(data, width, height, style);
+                this.applyAdvancedFilmGrain(data, width, height);
                 this.applyVignette(data, width, height);
-                this.applyFilmGrain(data, width, height);
                 
                 return imageData;
             }
             
             static processVintageColor(r, g, b) {
-                // 더 미묘한 필름 톤 커브
+                // 필름 톤 커브 (요청된 수치: 0.15)
                 const filmCurve = (x) => {
                     const normalized = x / 255;
-                    // 아주 부드러운 S-커브
                     const curved = normalized + (normalized - normalized * normalized) * 0.15;
                     return Math.max(0, Math.min(255, curved * 255));
                 };
                 
-                // 색상 쇠퇴를 더 미묘하게
+                // 그림자 영역 감지 및 처리 (요청된 수치: 80, 0.15)
+                const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                const shadowThreshold = 80;
+                const isShadow = luminance < shadowThreshold;
+                
+                // 색상 쇠퇴 (요청된 수치: 0.92, 0.05)
                 const colorFade = (color, intensity) => {
                     const fade = 0.92 + intensity * 0.05;
                     return color * fade;
                 };
                 
-                // 아주 미묘한 따뜻함
+                // 색온도 조정 (요청된 수치: 1.01, 1.002, 0.995)
                 r = colorFade(r * 1.01, 0.08);
                 g = colorFade(g * 1.002, 0.05);
                 b = colorFade(b * 0.995, 0.03);
                 
-                // 채도를 덜 감소
-                const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-                const saturation = 0.85; // 더 자연스러운 채도
-                r = luminance + (r - luminance) * saturation;
-                g = luminance + (g - luminance) * saturation;
-                b = luminance + (b - luminance) * saturation;
+                // 그림자 영역을 어둡게 (요청된 수치: 0.15)
+                if (isShadow) {
+                    const shadowIntensity = 1 - (luminance / shadowThreshold) * 0.15;
+                    r *= shadowIntensity;
+                    g *= shadowIntensity;
+                    b *= shadowIntensity;
+                }
+                
+                // 채도 유지율 (요청된 수치: 0.88)
+                const newLuminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                const saturation = 0.88;
+                r = newLuminance + (r - newLuminance) * saturation;
+                g = newLuminance + (g - newLuminance) * saturation;
+                b = newLuminance + (b - newLuminance) * saturation;
                 
                 // 부드러운 톤 커브 적용
                 r = filmCurve(r);
                 g = filmCurve(g);
                 b = filmCurve(b);
                 
-                // 밝기 조정을 더 미묘하게
-                const brightness = 1.03;
+                // 전체 밝기 (요청된 수치: 1.5)
+                const brightness = 1.5;
                 r = Math.min(255, r * brightness);
                 g = Math.min(255, g * brightness);
                 b = Math.min(255, b * brightness);
@@ -635,29 +601,84 @@
             }
             
             static processVintageBW(r, g, b) {
-                // 빈티지 흑백 변환 (더 따뜻한 가중치)
+                // 흑백 변환 가중치 (기존 수치 유지)
                 const luminance = 0.25 * r + 0.65 * g + 0.1 * b;
                 
-                // 부드러운 대비 조정
+                // 그림자 영역 감지 (기존 수치: 85, 0.12)
+                const shadowThreshold = 85;
+                const isShadow = luminance < shadowThreshold;
+                
+                // 대비 조정 (기존 수치: 0.92, 1.04)
                 const contrast = (x) => {
                     const normalized = x / 255;
-                    // 중간톤을 살짝 밝게, 너무 강하지 않게
-                    const adjusted = Math.pow(normalized, 0.9) * 1.05;
+                    const adjusted = Math.pow(normalized, 0.92) * 1.04;
                     return Math.min(255, adjusted * 255);
                 };
                 
                 let gray = contrast(luminance);
                 
-                // 은염 필름의 따뜻한 톤 (세피아 느낌, 아주 미묘하게)
-                const sepia_r = gray * 1.05;
+                // 그림자 영역을 어둡게 (기존 수치: 0.12)
+                if (isShadow) {
+                    const shadowIntensity = 1 - (luminance / shadowThreshold) * 0.12;
+                    gray *= shadowIntensity;
+                }
+                
+                // 세피아 톤 (기존 수치: 1.04, 1.02, 0.96)
+                const sepia_r = gray * 1.04;
                 const sepia_g = gray * 1.02;
-                const sepia_b = gray * 0.95;
+                const sepia_b = gray * 0.96;
                 
                 return {
                     r: Math.round(Math.max(0, Math.min(255, sepia_r))),
                     g: Math.round(Math.max(0, Math.min(255, sepia_g))),
                     b: Math.round(Math.max(0, Math.min(255, sepia_b)))
                 };
+            }
+            
+            // 새로운 기능: 계절별 색상 톤닝 (미세 강화)
+            static applySeasonalToning(data, width, height, style) {
+                const seasonalStrength = 0.1; // 미묘한 강도
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    if (style === 'color') {
+                        // 가을 따뜻함 강화
+                        data[i] = Math.min(255, data[i] * (1 + seasonalStrength * 0.08)); // 빨강 증가
+                        data[i + 1] = Math.min(255, data[i + 1] * (1 + seasonalStrength * 0.04)); // 초록 살짝 증가
+                        data[i + 2] = Math.max(0, data[i + 2] * (1 - seasonalStrength * 0.02)); // 파랑 감소
+                    }
+                }
+            }
+            
+            // 새로운 기능: 고급 필름 그레인 (미세 강화)
+            static applyAdvancedFilmGrain(data, width, height) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const x = (i / 4) % width;
+                    const y = Math.floor((i / 4) / width);
+                    const luminance = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                    
+                    // 펄린 노이즈 시뮬레이션 (미세)
+                    const perlinNoise = this.perlinNoise(x * 0.01, y * 0.01) * 2;
+                    
+                    // 밝기 의존적 그레인: 어두운 곳에 더 강하게 (미세)
+                    const darknessBoost = luminance < 100 ? (100 - luminance) / 100 * 0.5 : 0;
+                    
+                    // 다중 옥타브 노이즈 (요청된 수치: 0.4, 0.24, 0.8, 1.0)
+                    const octave1 = Math.sin(x * 0.4) * Math.cos(y * 0.4) * 0.8;
+                    const octave2 = Math.sin(x * 0.24) * Math.cos(y * 0.24) * 0.4;
+                    const multiOctave = (octave1 + octave2) * 0.5;
+                    
+                    const finalGrain = (perlinNoise + multiOctave + darknessBoost) * 1.0;
+                    
+                    data[i] = Math.max(0, Math.min(255, data[i] + finalGrain));
+                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + finalGrain));
+                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + finalGrain));
+                }
+            }
+            
+            // 펄린 노이즈 함수
+            static perlinNoise(x, y) {
+                const a = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+                return (a - Math.floor(a)) * 2 - 1;
             }
             
             static applyVignette(data, width, height) {
@@ -669,29 +690,12 @@
                     for (let x = 0; x < width; x++) {
                         const index = (y * width + x) * 4;
                         const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-                        const vignette = 1 - (distance / maxDistance) * 0.08; // 훨씬 미묘한 비네팅
+                        const vignette = 1 - (distance / maxDistance) * 0.08; // 기존 수치 유지
                         
-                        data[index] *= vignette;     // r
-                        data[index + 1] *= vignette; // g
-                        data[index + 2] *= vignette; // b
+                        data[index] *= vignette;
+                        data[index + 1] *= vignette;
+                        data[index + 2] *= vignette;
                     }
-                }
-            }
-            
-            static applyFilmGrain(data, width, height) {
-                // 거의 보이지 않을 정도로 미세한 그레인
-                for (let i = 0; i < data.length; i += 4) {
-                    const x = (i / 4) % width;
-                    const y = Math.floor((i / 4) / width);
-                    
-                    // 티가 거의 안나는 수준의 미묘한 노이즈 패턴
-                    const noise1 = Math.sin(x * 0.2) * Math.cos(y * 0.2);
-                    const noise2 = Math.sin(x * 0.12 + y * 0.12) * 0.4;
-                    const grain = (noise1 + noise2) * 0.8; // 극도로 미묘한 그레인
-                    
-                    data[i] = Math.max(0, Math.min(255, data[i] + grain));
-                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + grain));
-                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + grain));
                 }
             }
         }
@@ -708,7 +712,6 @@
             modal.style.display = 'none';
         }
 
-        // ESC 키로 모달 닫기
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closePhotoModal();
@@ -746,7 +749,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     uploadedPhoto = e.target.result;
-                    document.querySelector('.upload-text').textContent = 'Processing with AI film engine...';
+                    document.querySelector('.upload-text').textContent = 'Processing with enhanced AI film engine...';
                     
                     const img = new Image();
                     img.onload = function() {
@@ -761,7 +764,7 @@
                             
                             document.getElementById('photoPreview').style.display = 'block';
                             document.getElementById('processingText').style.display = 'none';
-                            document.querySelector('.upload-text').textContent = 'Film processing complete!';
+                            document.querySelector('.upload-text').textContent = 'Enhanced film processing complete!';
                         }, 1200);
                     };
                     img.src = e.target.result;
@@ -781,7 +784,7 @@
             }
 
             const container = document.getElementById('scrapbook-container');
-            container.innerHTML = '<div class="loading">Creating your entry...</div>';
+            container.innerHTML = '<div class="loading">Creating your entry with enhanced film processing...</div>';
 
             setTimeout(() => {
                 const processedPhoto = photoStyle === 'color' ? processedImages.color : processedImages.bw;
@@ -884,9 +887,9 @@
         window.addEventListener('load', function() {
             const sampleEntry = {
                 id: 1,
-                photo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-family="Arial" font-size="16">Upload a photo to see AI film processing</text></svg>',
-                title: 'AI Film Processing Ready',
-                content: 'Upload any photo and watch it transform with authentic film camera characteristics. Every image will have the same consistent vintage look.',
+                photo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23f0f0f0"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-family="Arial" font-size="16">Upload a photo to see enhanced AI film processing</text></svg>',
+                title: 'Enhanced AI Film Processing Ready',
+                content: 'Upload any photo and watch it transform with advanced film characteristics including seasonal toning, Perlin noise grain, and brightness-dependent effects.',
                 date: new Date().toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 
