@@ -750,7 +750,7 @@
             scrapbookData.forEach(entry => {
                 const pageHTML = `
                     <div class="scrapbook-page" data-id="${entry.id}">
-                        <img src="${entry.photo}" alt="memory" class="page-photo">
+                        <img src="${entry.photo}" alt="memory" class="page-photo" onclick="openPhotoModal('${entry.photo}')">
                         <div class="page-content">
                             <div class="edit-actions">
                                 <button class="edit-btn" onclick="editEntry(${entry.id})">Edit</button>
